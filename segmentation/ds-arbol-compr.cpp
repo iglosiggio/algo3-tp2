@@ -4,7 +4,7 @@
 struct componente {
 	int padre;
 	int tamanio;
-	int mint;
+	int idiff;
 };
 
 using disjoint_set = std::vector<struct componente>;
@@ -37,19 +37,16 @@ void ds_union(disjoint_set* ds, int a, int b, uint8_t diff) {
 			std::swap(a, b);
 		}
 
-		Ca->tamanio += Cb->tamanio;
-
-		if (Ca->mint > Cb->mint)
-			Ca->mint = Cb->mint;
-
 		Cb->padre = a;
+		Ca->tamanio += Cb->tamanio;
+		Ca->idiff = diff;
 	}
 }
 
-uint8_t ds_mint(disjoint_set* ds, int a, int K) {
+uint8_t ds_idiff(disjoint_set* ds, int a, int K) {
 	a = ds_find(ds, a);
 	struct componente Ca = (*ds)[a];
-	return Ca.mint + K / Ca.tamanio;
+	return Ca.idiff + K / Ca.tamanio;
 }
 
 }

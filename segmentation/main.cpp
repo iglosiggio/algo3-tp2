@@ -14,10 +14,32 @@ using Eje = std::pair<int, int>;
 
 /* TODO: K es constante ahora, estaría bueno probar variándolo */
 bool misma_region(Eje e, int diff, disjoint_set* ds) {
-	int Ci = ds_mint(ds, e.first, 600);
-	int Cj = ds_mint(ds, e.second, 600);
+	int Ci = ds_idiff(ds, e.first, 600);
+	int Cj = ds_idiff(ds, e.second, 600);
 
 	return diff <= MIN(Ci, Cj);
+}
+
+/* Devuelve `true` si pudo conseguir un eje y `false` si no quedan más ejes */
+bool siguiente_eje(std::vector<Eje> ejes[256], int* i, Eje* e) {
+		while (*i < 256 && ejes[*i].empty())
+			(*i)++;
+
+		if (*i == 256)
+			return false;
+
+		*e = ejes[*i].back();
+		ejes[*i].pop_back();
+
+		return true;
+}
+
+/* NOTA: Leer directamente un uint8_t lee una letra, no un número,
+ *       tenemos que leer un entero y convertirlo a uint8 */
+uint8_t leer() {
+	unsigned dato;
+	std::cin >> dato;
+	return dato;
 }
 
 int main(int argc, char** argv) {
@@ -30,16 +52,16 @@ int main(int argc, char** argv) {
 	imagen = new uint8_t[ancho * alto];
 
 	/* Leemos la primera línea que tiene un sólo tipo de aristas */
-	std::cin >> imagen[0];
+	imagen[0] = leer();
 	for (int i = 1; i < ancho; i++) {
-		std::cin >> imagen[i];
+		imagen[i] = leer();
 		uint8_t peso_w = abs(imagen[i-1] - imagen[i]);
 		ejes[peso_w].emplace_back(i-1, i);
 	}
 
 	/* Leemos el resto de la foto */
 	for (int i = ancho; i < ancho * alto; i++) {
-		std::cin >> imagen[i];
+		imagen[i] = leer();
 
 		/* Estas aristas requieren que el píxel no sea el primero de la
 		 * fila */
@@ -64,18 +86,10 @@ int main(int argc, char** argv) {
 	disjoint_set* ds = ds_new(ancho * alto);
 
 	int diff = 0;
-	while(diff != 255 && !ejes[diff].empty()) {
-		while (ejes[diff].empty() && diff < 256)
-			diff++;
-		if (diff == 256)
-			break;
-
-		Eje e = ejes[diff].back();
-		ejes[diff].pop_back();
-
+	Eje e;
+	while(siguiente_eje(ejes, &diff, &e))
 		if (misma_region(e, diff, ds))
 			ds_union(ds, e.first, e.second, diff);
-	}
 
 	for(int i = 0; i < ancho * alto; i++) {
 		std::cout << ds_find(ds, i);
