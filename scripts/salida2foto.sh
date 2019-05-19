@@ -8,7 +8,6 @@
 
 ancho=$(awk '{if (NR == 2) { print NF; exit(0); }}' "$1")
 alto=$(($(wc -l < "$1") - 1))
+scripts=$(dirname "$0")
 
-echo "P2
-$ancho $alto
-255" | cat - "$1" | convert pgm:- png:-
+"$scripts/generar_ppm" "$ancho" "$alto" < "$1" | convert ppm:- png:-
