@@ -34,5 +34,9 @@ int main(int argc, char** argv) {
 	double time = std::chrono::duration<double, std::milli>(end - start).count();
 
 	std::cerr << algo << ' ' << time << std::endl;
-	/* TODO: Imprimir resultados */
+	if(resultado.size() >= 1){
+		for(int i= 0; i < resultado.size(); i++){
+			std::cout << resultado[i][0] << ' ' << resultado[i][1] << ' ' << resultado[i][2] << std::endl;
+		}
+	}
 }
