@@ -7,7 +7,7 @@
 #   * Siempre marca 255 como valor mayor aunque no sea necesario
 
 ancho=$(awk '{if (NR == 2) { print NF; exit(0); }}' "$1")
-alto=$(($(wc -l < "$1") - 1))
+alto=$(($(wc -l < "$1")))
 scripts=$(dirname "$0")
 
 "$scripts/generar_ppm" "$ancho" "$alto" < "$1" | convert ppm:- png:-
