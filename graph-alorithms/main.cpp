@@ -14,22 +14,23 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < n; i++)
 		std::cin >> precios[i];
 
-	/* Grafo es un vector de vecindades, cada vecindad es un vector de
-	 * aristas con la forma {vecino, distancia} */
-	Grafo grafo(n);
+	/* Grafo es un vector de aristas, {origen, destino, distancia} */
+	EdgesList grafo(m);
 
 	uint32_t origen;
 	uint32_t destino;
 	uint32_t peso;
-	for (int i = 1; i <= n; ++i) {
+	for (int i = 0; i < m; i++) {
 		std::cin >> origen >> destino >> peso;
-		grafo[origen].push_back({destino, peso});
+		grafo[i] = std::make_tuple(origen, destino, peso);
 	}
 
 	//entrada parseada, listo para inicializar el algoritmo.
 	auto start = std::chrono::steady_clock::now();
+
 	auto resultado = ciudades(n, m, precios, grafo);
 	auto end = std::chrono::steady_clock::now();
+
 
 	double time = std::chrono::duration<double, std::milli>(end - start).count();
 

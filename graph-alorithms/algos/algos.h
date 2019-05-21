@@ -4,12 +4,15 @@
 #include <cstdint>
 #include <vector>
 #include <utility>
+#include <tuple>
 
-using Grafo = std::vector<std::vector<std::pair<uint32_t, uint32_t>>>;
+//lista de aristas, se ordena por origen, destino, peso.
+using EdgesList = std::vector<std::tuple<uint32_t, uint32_t, uint32_t>>;
+
 using Costes = std::vector<std::vector<uint32_t>>;
 
 extern const char* algo;
 
-Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, Grafo);
+Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList);
 
 #endif
