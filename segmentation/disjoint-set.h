@@ -11,7 +11,7 @@ int ds_find(disjoint_set*, int a);
 
 /* NOTE: Este observador es específico del problema a resolver ¿Está bien
  *       ponerlo como parte de la biblioteca de disjoint_set? */
-uint8_t ds_idiff(disjoint_set*, int a, int K);
+int ds_idiff(disjoint_set*, int a, int K);
 
 }
 

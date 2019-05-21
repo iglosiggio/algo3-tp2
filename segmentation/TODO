@@ -1,0 +1,3 @@
+* Hacer experimentos
+* Armar un target en el Makefile para generar fotos a partir de las salidas
+* Armar un target en el Makefile para importar fotos y aplicar un blur leve

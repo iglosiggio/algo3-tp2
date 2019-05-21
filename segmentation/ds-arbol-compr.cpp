@@ -43,7 +43,7 @@ void ds_union(disjoint_set* ds, int a, int b, uint8_t diff) {
 	}
 }
 
-uint8_t ds_idiff(disjoint_set* ds, int a, int K) {
+int ds_idiff(disjoint_set* ds, int a, int K) {
 	a = ds_find(ds, a);
 	struct componente Ca = (*ds)[a];
 	return Ca.idiff + K / Ca.tamanio;

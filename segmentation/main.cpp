@@ -13,9 +13,9 @@
 using Eje = std::pair<int, int>;
 
 /* TODO: K es constante ahora, estaría bueno probar variándolo */
-bool misma_region(Eje e, int diff, disjoint_set* ds) {
-	int Ci = ds_idiff(ds, e.first, 600);
-	int Cj = ds_idiff(ds, e.second, 600);
+bool misma_region(Eje e, int diff, disjoint_set* ds, int K) {
+	int Ci = ds_idiff(ds, e.first, K);
+	int Cj = ds_idiff(ds, e.second, K);
 
 	return diff <= MIN(Ci, Cj);
 }
@@ -43,10 +43,14 @@ uint8_t leer() {
 }
 
 int main(int argc, char** argv) {
+	int K = 600;
 	int ancho;
 	int alto;
 	uint8_t* imagen;
 	std::vector<Eje> ejes[256];
+
+	if (argc == 2)
+		K = std::stoi(argv[1]);
 
 	std::cin >> ancho >> alto;
 	imagen = new uint8_t[ancho * alto];
@@ -88,7 +92,7 @@ int main(int argc, char** argv) {
 	int diff = 0;
 	Eje e;
 	while(siguiente_eje(ejes, &diff, &e))
-		if (misma_region(e, diff, ds))
+		if (misma_region(e, diff, ds, K))
 			ds_union(ds, e.first, e.second, diff);
 
 	for(int i = 0; i < ancho * alto; i++) {
