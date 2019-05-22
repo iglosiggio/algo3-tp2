@@ -8,11 +8,12 @@
 const char* algo = __FILE__;
 using namespace std;
 
+using Distancias = vector<uint32_t>;
 Costes resultado;
 
-void BellmanFord(EdgesList g, uint32_t n, uint32_t m, uint32_t v_origen) { 
+Distancias BellmanFord(EdgesList& g, uint32_t n, uint32_t m, uint32_t v_origen) { 
 
-	vector<uint32_t> dist;
+	Distancias dist;
 	dist.resize(n, UINT32_MAX);
     dist[v_origen] = 0; 
 
@@ -32,11 +33,7 @@ void BellmanFord(EdgesList g, uint32_t n, uint32_t m, uint32_t v_origen) {
                 dist[origen] = dist[destino] + peso; 
         } 
     }
-	for (uint32_t i = 0; i < n; i++) {
-		if(i != v_origen){
-			resultado.push_back({v_origen, i, dist[i]});
-		}
-	}
+	return dist;
 } 
 
 
@@ -51,6 +48,9 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 
 	//multiplico los vertice por 61
 	uint32_t n2 = n * 61;
+
+	//las aristas las calculo después ya que puedo podar aristas
+	uint32_t m2 = 0;
 
 	//inicializo mi nuevo grafo de aristas
 	EdgesList g2;
@@ -69,23 +69,50 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 			*/
 
 			//ADVERTENCIA, mantener este código alejado de los niños, pues su ingesta puede resultar en toxicidad.
-			for(uint32_t j = (origen * 62); j < 62 * (origen + 1); j++){
-				for (uint32_t z = (destino * 62); z < 62 * (destino + 1); z++){
+			for(uint32_t j = (origen * 61); j < 61 * (origen + 1); j++){
+				for (uint32_t z = (destino * 61); z < 61 * (destino + 1); z++){
 
 					/* en particular solo agrego aristas si (z) que representa la cantidad de litros que voy a cargar
 					* es mayor o igual a la distancia que tiene el tramo. */
 					if(distancia <= z){
 						g2.push_back(std::make_tuple(j, z, precios[origen] * z));
+						m2++;
 					}
 				}
 			}
 	}
 
-
-
+	// me quede sin etiquetas de la biblia.
 	for (uint32_t i = 0; i < n; i++) {
-		BellmanFord(g, n, m, i);
-	}
 
+		Distancias dverdaderas;
+		dverdaderas.resize(n, UINT32_MAX);
+
+		for(uint32_t j = i * 61; j < 61 * (i + 1); j++){
+
+			//lo facilito.
+			Distancias dcrudas = BellmanFord(g2, n2, m2, i);
+
+			//calculo el min dist a vertice de cada bloque 0..61
+			for (uint32_t k = 0; k < n; i++) {
+
+				uint32_t min = UINT32_MAX;
+				for(uint32_t w = k * 61; w < 61 * (k + 1); j++) {
+					if(min > dcrudas[w]){
+						min = w;
+					}
+				}
+				if(dverdaderas[k] > min){
+					dverdaderas[k] = min ;
+				}
+			}
+		}
+
+		// legado a este punto acabo de calcular 61 vertices en teoría (61 formas de salir a revisar los vecinos)
+		// distancias verdaderas deberían ser los minimos efectivos.
+		for (uint32_t t = 0; t < n; t++) {
+			resultado.push_back({i, t, dverdaderas[t]});
+		}
+	}
 	return resultado;
 }
