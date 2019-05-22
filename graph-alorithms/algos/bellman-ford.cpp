@@ -83,7 +83,7 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 	}
 
 
-	uint32_t iteracion = 0;
+	uint32_t verticeN2 = 0;
 	for (uint32_t i = 1; i <= n; i++) {
 
 		Distancias dverdaderas;
@@ -91,37 +91,42 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 
 		for(uint32_t j = (i-1) * 61; j < 61 * i; j++){
 
-			Distancias dcrudas = BellmanFord(g2, n2, m2, iteracion);
+			Distancias dcrudas = BellmanFord(g2, n2, m2, verticeN2);
 
 			//para saber en que lote de 61 estoy
 			uint32_t verticeReal = floor(double (j / 61));
 
-			cout << "termine bellman ford: " << iteracion << ' ' << verticeReal << endl;
+			cout << "termine bellman ford: " << verticeN2 << ' ' << verticeReal << endl;
 
 			//calculo el min dist a vertice de cada bloque 0..61
-
-
+			uint32_t vertice = 0;
 			for (uint32_t k = 1; k <= n; k++) {
-
+				
 				uint32_t min = UINT32_MAX;
 				for(uint32_t w = (i-1) * 61; w < 61 * i; w++){
-					if(min > dcrudas[w]){
-						min = w;
+
+					//si mi iterador vertice es igual al original lo evito, por que la dist contra si mismo es 0.
+					if(vertice != verticeN2){
+
+						if(min > dcrudas[vertice]){
+							min = dcrudas[vertice];
+						}
 					}
+					vertice++;
 				}
 
 				//actualizo el minimo total
-				if(dverdaderas[k] > min){
-					dverdaderas[k] = min;
+				if(dverdaderas[k - 1] > min){
+					dverdaderas[k - 1] = min;
 				}
 				//la distancia con si mismo es 0
-				if(k == verticeReal){
-					dverdaderas[k] = 0;
+				if(k - 1 == verticeReal){
+					dverdaderas[k - 1] = 0;
 				}
 			}
 
 
-			iteracion++;
+			verticeN2++;
 		}
 		// legado a este punto acabo de calcular 61 vertices en teoría (61 formas de salir a revisar los vecinos)
 		// distancias verdaderas deberían ser los minimos efectivos.
