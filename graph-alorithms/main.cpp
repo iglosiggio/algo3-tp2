@@ -40,4 +40,5 @@ int main(int argc, char** argv) {
 			std::cout << resultado[i][0] << ' ' << resultado[i][1] << ' ' << resultado[i][2] << std::endl;
 		}
 	}
+	
 }

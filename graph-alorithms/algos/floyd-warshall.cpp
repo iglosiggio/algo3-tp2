@@ -30,6 +30,7 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 
 	vector<vector<uint32_t>> gMatriz;
 
+	//armo la matriz
 	vector<uint32_t> row;
 	row.resize(n, 0);
 	gMatriz.resize(n, row);
@@ -38,8 +39,6 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 		gMatriz[get<0>(g[i])][get<1>(g[i])] = get<2>(g[i]);
 		gMatriz[get<1>(g[i])][get<0>(g[i])] = get<2>(g[i]);
     }
-
-
 
 	return floydWarshall(gMatriz, n);
 }
