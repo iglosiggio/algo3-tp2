@@ -43,7 +43,7 @@ Distancias bellmanFord(EdgesList& g, uint32_t n, uint32_t m, uint32_t v_origen) 
 
 Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 
-	//max posible de nafta en el auto
+	//max posible de nafta en el auto (util para debugging)
 	uint32_t maxNafta = 61;
 	//vertices
 	uint32_t n2 = n * maxNafta;
@@ -99,15 +99,6 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 	//un sort no hace mal a nadie, y me sirvio un montonaso para debuggear esto. 
 	std::sort (g2.begin(), g2.end());
 
-	/*for(int i=0; i < g2.size(); i++){
-		uint32_t origen = get<0>(g2[i]); 
-		uint32_t destino = get<1>(g2[i]); 
-		uint32_t distancia = get<2>(g2[i]);
-
-		cout << "origen: " << origen << " destino: " << destino << " distancia: " << distancia << endl;
-		
-	}*/
-
 	//PARTE 2, bellman ford sobre el grafo grande, y recuperar el resultado que importa.
 	for(uint32_t i = 0 ; i < n ; i++){
 
@@ -124,12 +115,13 @@ Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
 		for(int k = 0 ; k < n ; k++) {
 			//si mi iterador vertice es igual al original la dist contra si mismo es 0.
 			int minLocal = k * maxNafta;
+
+			//Trucaso, el minLocal siempre es llegar a un vertice con 0 de nafta (posiciones 0,61,122,183 etc).
 			dverdaderas[k] = dcrudas[minLocal];
 
 		}
 
-		// legado a este punto acabo de calcular 61 vertices en teoría (61 formas de salir a revisar los vecinos)
-		// distancias verdaderas deberían ser los minimos efectivos.
+		// legado a este punto acabo de calcular todos los minimos, los agrego a los resultados.
 		for (uint32_t t = 0; t < n; t++) {
 			if (i != t) {
 				resultado.push_back({i, t, dverdaderas[t]});
