@@ -9,7 +9,7 @@ void dijkstra(ListaDeAristas g, uint32_t v_inicial, uint32_t* precios){
 
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas g) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas& g, Matriz& matriz) {
 	
 	return resultado;
 }

@@ -3,9 +3,6 @@
 #include <iostream>
 #include <algorithm>
 #include <stdint.h>
-#include <queue> 
-#include <tuple> 
-#include <cmath> 
 
 const char* algo = __FILE__;
 using namespace std;
@@ -39,9 +36,7 @@ Distancias bellmanFord(ListaDeAristas& g, uint32_t n, uint32_t m, uint32_t v_ori
 	return dist;
 } 
 
-
-
-Costes ciudades(uint32_t nOriginal, uint32_t n2, uint32_t m2, ListaDeAristas g2) {
+Costes ciudades(uint32_t nOriginal, uint32_t n2, uint32_t m2, ListaDeAristas& g2, Matriz& matriz) {
 
 	for(uint32_t i = 0 ; i < nOriginal ; i++){
 

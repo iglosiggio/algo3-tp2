@@ -4,41 +4,38 @@
 const char* algo = __FILE__;
 
 using namespace std;
-Costes floydWarshall(vector<vector<uint32_t>> g, uint32_t n) {
+Costes resultado;
+
+void floydWarshall(Matriz& matriz, uint32_t n) {
     int i, j, k;
     for (k = 0; k < n; k++) {
         for (i = 0; i < n; i++) {
             for (j = 0; j < n; j++) {
-                if ((g[i][k] * g[k][j] != 0) && (i != j)) {
-                    if ((g[i][k] + g[k][j] < g[i][j]) || (g[i][j] == 0)) {
-                        g[i][j] = g[i][k] + g[k][j];
-                    }
+                if (matriz[i][k] + matriz[k][j] < matriz[i][j]) {
+                    matriz[i][j] = matriz[i][k] + matriz[k][j]; 
                 }
             }
         }
     }
-	Costes resultado;
-    for (uint32_t i = 0; i < n; i++) {
-        for (uint32_t j = 0; j < n; j++) {
-			resultado.push_back({i,j, g[i][j]});
-        }
-    }
-	return resultado;
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas g) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m2, ListaDeAristas& g2, Matriz& matriz) {
 
-	vector<vector<uint32_t>> gMatriz;
+    floydWarshall(matriz, n);
 
-	//armo la matriz
-	vector<uint32_t> row;
-	row.resize(n, 0);
-	gMatriz.resize(n, row);
+    cout << nOriginal << " " << n << " " << m2 << endl;
 
-    for (int i = 0; i < m; i++) {
-		gMatriz[get<0>(g[i])][get<1>(g[i])] = get<2>(g[i]);
-		gMatriz[get<1>(g[i])][get<0>(g[i])] = get<2>(g[i]);
-    }
+    for(uint32_t i = 0 ; i < nOriginal ; i++){
 
-	return floydWarshall(gMatriz, n);
+		int filaTarget = i * MAX_NAFTA;
+		for(uint32_t k = 0 ; k < nOriginal ; k++) {
+
+			int columnaTarget = k * MAX_NAFTA;
+
+			if( i != k){
+				resultado.push_back({i, k, matriz[filaTarget][columnaTarget]});
+			}
+		}
+	}
+	return resultado;
 }
