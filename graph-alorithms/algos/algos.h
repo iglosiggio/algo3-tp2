@@ -14,7 +14,7 @@ using namespace std;
 using ListaDeAristas = vector<tuple<uint32_t, uint32_t, uint32_t>>;
 
 //vecinos representados como claves origen -> pares(destino, peso)
-using ListaDeVecinos = vector<vector<tuple<uint32_t, uint32_t>>>;
+using ListaDeVecinos = vector<vector<pair<uint32_t, uint32_t>>>;
 
 //matriz columna indica origen, fila indica destino, pos[origen][destino] el peso.
 using Matriz = vector<vector<uint32_t>>;
