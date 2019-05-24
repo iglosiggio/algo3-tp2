@@ -4,10 +4,17 @@
 #include "algos/algos.h"
 
 
-//Exclusivo de floyd warshall
-bool targetIsFloydWarshall = floydWarshallDirectory.compare(algo) == 0;
+string floydWarshallDir = "algos/floyd-warshall.cpp";
+string bellmanFordDir = "algos/bellman-ford.cpp";
+string dijkstraDir = "algos/dijkstra.cpp";
+string pqDijkstraDir = "algos/pq-dijkstra.cpp";
 
-void generarMatriz(uint32_t n, Matriz& matriz){
+ListaDeAristas gAristas;
+ListaDeVecinos gVecinos;
+Matriz matriz;
+
+
+void generarMatriz(uint32_t n){
 
 	//armo la matriz
 	matriz.resize(n);
@@ -20,19 +27,38 @@ void generarMatriz(uint32_t n, Matriz& matriz){
 	}
 }
 
-void AgregarArista(ListaDeAristas& g2, Matriz& matriz, int32_t a, int32_t  b, int32_t costo){
+void generarVecinos(uint32_t n){
 
-	//no es lo más limpio que me gustaría pero es: o hacer esto o replicar todo el código.
-	if(targetIsFloydWarshall){
+	//armo la lista de vecinos
+	vector<tuple<uint32_t, uint32_t>> vect;
+	gVecinos.resize(n, vect);
+}
+
+//no es lo más limpio que me gustaría pero es: o hacer esto o replicar todo el código.
+void AgregarArista(int32_t a, int32_t  b, int32_t costo){
+
+	//floyd warshall implementa matriz
+	if(floydWarshallDir.compare(algo) == 0){
 		matriz[a][b] = costo;
-	} else {
-		g2.push_back(std::make_tuple(a, b, costo));
+	}
+
+	//bellman ford implementa lista de aristas
+	if(bellmanFordDir.compare(algo) == 0) {
+		gAristas.push_back(std::make_tuple(a, b, costo));
+	}
+
+	//Ambos dijstras implementan listas de vecinos
+	if(dijkstraDir.compare(algo) == 0) {
+		gVecinos[a].push_back({b, costo});
+	}
+	if(pqDijkstraDir.compare(algo) == 0) {
+		gVecinos[a].push_back({b, costo});
 	}
 }
 
 
 //Trasnformacion del grafo original.
-void TrasnformarGrafo(ListaDeAristas& g2, Matriz& matriz, uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOriginal){
+void TrasnformarGrafo(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOriginal){
 	
 	for (uint32_t i = 0; i < mOriginal; i++) {
 
@@ -55,7 +81,7 @@ void TrasnformarGrafo(ListaDeAristas& g2, Matriz& matriz, uint32_t& m2, uint32_t
 					if( distancia + litrosCargadosEnA - litrosCargadosEnB >= 0) {
 						costo = precios[origen] * (distancia + litrosCargadosEnA - litrosCargadosEnB);
 					}
-					AgregarArista(g2, matriz, verticeA, verticeB, costo);
+					AgregarArista(verticeA, verticeB, costo);
 					m2++;
 				}
 
@@ -66,7 +92,7 @@ void TrasnformarGrafo(ListaDeAristas& g2, Matriz& matriz, uint32_t& m2, uint32_t
 					if(distancia + litrosCargadosEnB - litrosCargadosEnA >= 0) {
 						costo = precios[destino] * (distancia + litrosCargadosEnB - litrosCargadosEnA);
 					}
-					AgregarArista(g2, matriz, verticeB, verticeA, costo);
+					AgregarArista(verticeB, verticeA, costo);
 					m2++;
 				}
 				litrosCargadosEnA++;
@@ -94,20 +120,20 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < nOriginal; i++)
 		std::cin >> precios[i];
 
-	//inicializo mi nuevo grafo de aristas
-	ListaDeAristas g2;
-
-	//o nueva matriz si el algoritmo target es floyd warshall.
-	Matriz matriz;
-	if(targetIsFloydWarshall) {
-		generarMatriz(n2, matriz);
+	if(floydWarshallDir.compare(algo) == 0) {
+		generarMatriz(n2);
 	}
 
-	TrasnformarGrafo(g2, matriz, m2, n2, precios, mOriginal);
+	if(dijkstraDir.compare(algo) == 0) {
+		generarVecinos(n2);
+	}
+
+
+	TrasnformarGrafo(m2, n2, precios, mOriginal);
 
 	//entrada parseada, listo para inicializar el algoritmo.
 	auto start = std::chrono::steady_clock::now();
-	auto resultado = ciudades(nOriginal, n2, m2, g2, matriz);
+	auto resultado = ciudades(nOriginal, n2, m2, gAristas, gVecinos, matriz);
 	auto end = std::chrono::steady_clock::now();
 
 	double time = std::chrono::duration<double, std::milli>(end - start).count();

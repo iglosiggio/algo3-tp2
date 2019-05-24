@@ -19,11 +19,9 @@ void floydWarshall(Matriz& matriz, uint32_t n) {
     }
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m2, ListaDeAristas& g2, Matriz& matriz) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m2, ListaDeAristas& gAristas, ListaDeVecinos& gVecinos, Matriz& matriz) {
 
     floydWarshall(matriz, n);
-
-    cout << nOriginal << " " << n << " " << m2 << endl;
 
     for(uint32_t i = 0 ; i < nOriginal ; i++){
 

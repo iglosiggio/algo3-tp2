@@ -36,13 +36,13 @@ Distancias bellmanFord(ListaDeAristas& g, uint32_t n, uint32_t m, uint32_t v_ori
 	return dist;
 } 
 
-Costes ciudades(uint32_t nOriginal, uint32_t n2, uint32_t m2, ListaDeAristas& g2, Matriz& matriz) {
+Costes ciudades(uint32_t nOriginal, uint32_t n2, uint32_t m2, ListaDeAristas& gAristas, ListaDeVecinos& gVecinos, Matriz& matriz) {
 
 	for(uint32_t i = 0 ; i < nOriginal ; i++){
 
 		int verticeTarget = i * MAX_NAFTA;
 
-		Distancias dcrudas = bellmanFord(g2, n2, m2, verticeTarget);
+		Distancias dcrudas = bellmanFord(gAristas, n2, m2, verticeTarget);
 
 		for(uint32_t k = 0 ; k < nOriginal ; k++) {
 			//si mi iterador vertice es igual al original la dist contra si mismo es 0.
