@@ -26,7 +26,7 @@ Costes floydWarshall(vector<vector<uint32_t>> g, uint32_t n) {
 	return resultado;
 }
 
-Costes ciudades(uint32_t n, uint32_t m, uint32_t* precios, EdgesList g) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas g) {
 
 	vector<vector<uint32_t>> gMatriz;
 
