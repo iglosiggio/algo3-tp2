@@ -75,7 +75,7 @@ void TrasnformarGrafo(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOr
 			int32_t litrosCargadosEnA = 0;
 			for(int32_t verticeB = destino * MAX_NAFTA; verticeB < MAX_NAFTA * (destino + 1); verticeB++) {
 				
-				if(distancia + litrosCargadosEnA < MAX_NAFTA) {
+				if(distancia + litrosCargadosEnA < MAX_NAFTA && litrosCargadosEnA - distancia <= litrosCargadosEnB) {
 					
 					int32_t costo = 0;
 					if( distancia + litrosCargadosEnA - litrosCargadosEnB >= 0) {
@@ -86,7 +86,7 @@ void TrasnformarGrafo(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOr
 				}
 
 				//las aristas tienen dirección, así que si puedo agregar uno, agrego el espejo con su respectivo costo.
-				if(distancia + litrosCargadosEnB < MAX_NAFTA) {
+				if(distancia + litrosCargadosEnB < MAX_NAFTA && litrosCargadosEnB - distancia <= litrosCargadosEnA) {
 					
 					uint32_t costo = 0;
 					if(distancia + litrosCargadosEnB - litrosCargadosEnA >= 0) {
@@ -130,6 +130,7 @@ int main(int argc, char** argv) {
 
 
 	TrasnformarGrafo(m2, n2, precios, mOriginal);
+	cout << "vertices generados: " << n2 << " aristas generadas: " << m2 << endl;
 
 	//entrada parseada, listo para inicializar el algoritmo.
 	auto start = std::chrono::steady_clock::now();
