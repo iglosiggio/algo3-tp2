@@ -1,0 +1,88 @@
+graph ciudades {
+	layout=sfdp
+
+	/* Horizonales 1 */
+	A -- B
+	B -- C
+	C -- D
+	D -- E
+	E -- F
+	/* Horizontales 2 */
+	G -- H
+	H -- I
+	I -- J
+	J -- K
+	K -- L
+	/* Horizontales 3 */
+	M -- N
+	N -- O
+	O -- P
+	P -- Q
+	Q -- R
+	/* Horizontales 4 */
+	S -- T
+	T -- U
+	U -- V
+	V -- W
+	W -- X
+	
+	/* Verticales 1 */
+	G -- A
+	H -- B
+	I -- C
+	J -- D
+	K -- E
+	L -- F
+	/* Verticales 2 */
+	M -- G
+	N -- H
+	O -- I
+	P -- J
+	Q -- K
+	R -- L
+	/* Verticales 3 */
+	S -- M
+	T -- N
+	U -- O
+	V -- P
+	W -- Q
+	X -- R
+
+	/* Diagonales Izq 1 */
+	H -- A
+	I -- B
+	J -- C
+	K -- D
+	L -- E
+	/* Diagonales Izq 2 */
+	N -- G
+	O -- H
+	P -- I
+	Q -- J
+	R -- K
+	/* Diagonales Izq 3 */
+	T -- M
+	U -- N
+	V -- O
+	W -- P
+	X -- Q
+
+	/* Diagonales Der 1 */
+	G -- B
+	H -- C
+	I -- D
+	J -- E
+	K -- F
+	/* Diagonales Der 2 */
+	M -- H
+	N -- I
+	O -- J
+	P -- K
+	Q -- L
+	/* Diagonales Der 3 */
+	S -- N
+	T -- O
+	U -- P
+	V -- Q
+	W -- R
+}
