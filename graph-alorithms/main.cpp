@@ -5,11 +5,7 @@
 
 
 string floydWarshallDir = "algos/floyd-warshall.cpp";
-string bellmanFordDir = "algos/bellman-ford.cpp";
-string dijkstraDir = "algos/dijkstra.cpp";
-string pqDijkstraDir = "algos/pq-dijkstra.cpp";
 
-ListaDeAristas gAristas;
 ListaDeVecinos gVecinos;
 Matriz matriz;
 
@@ -29,10 +25,7 @@ void generarVecinos(uint32_t n) {
 void AgregarArista(int32_t a, int32_t  b, int32_t costo){
 	if(floydWarshallDir.compare(algo) == 0){
 		matriz[a][b] = costo;
-	} else if(bellmanFordDir.compare(algo) == 0) {
-		gAristas.push_back(std::make_tuple(a, b, costo));
-	} else if(dijkstraDir.compare(algo) == 0
-		  || pqDijkstraDir.compare(algo) == 0) {
+	} else {
 		gVecinos[a].push_back({b, costo});
 	}
 }
@@ -93,19 +86,18 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < nOriginal; i++)
 		std::cin >> precios[i];
 
-	if(floydWarshallDir.compare(algo) == 0)
+	if(floydWarshallDir.compare(algo) == 0) {
 		generarMatriz(n2);
-
-	if(dijkstraDir.compare(algo) == 0
-		|| pqDijkstraDir.compare(algo) == 0)
+	} else {
 		generarVecinos(n2);
+	}
 
 	TransformarGrafo(m2, n2, precios, mOriginal);
 
 	cout << "vertices generados: " << n2 << " aristas generadas: " << m2 << endl;
 
 	auto start = std::chrono::steady_clock::now();
-	auto resultado = ciudades(nOriginal, n2, m2, gAristas, gVecinos, matriz);
+	auto resultado = ciudades(nOriginal, n2, m2, gVecinos, matriz);
 	auto end = std::chrono::steady_clock::now();
 
 	double time = std::chrono::duration<double, std::milli>(end - start).count();
