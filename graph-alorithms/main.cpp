@@ -70,7 +70,17 @@ void TransformarGrafo(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOr
 	}
 }
 
-void TransformarGrafoLineal(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOriginal) {
+void TransformarGrafoLineal(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOriginal, uint32_t nOriginal) {
+	
+	for(uint32_t i = 0; i < nOriginal; i++){
+		int32_t vertice = i * MAX_NAFTA;
+
+		for (int32_t litros = 1; litros < MAX_NAFTA; litros++) {
+				AgregarArista(vertice + litros - 1, vertice + litros, precios[i]);
+				m2++;
+		}
+	}
+	
 	for (uint32_t i = 0; i < mOriginal; i++) {
 		int32_t origen;
 		int32_t destino;
@@ -83,11 +93,6 @@ void TransformarGrafoLineal(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32
 
 		for (int32_t litros = 0; litros < MAX_NAFTA; litros++) {
 
-			if(litros != 0){
-				AgregarArista(verticeA + litros - 1, verticeA + litros, precios[origen]);
-				AgregarArista(verticeB + litros - 1, verticeB + litros, precios[destino]);
-				m2 = m2 + 2;
-			}
 			if(litros >= distancia){
 				AgregarArista(verticeA + litros, verticeB + litros - distancia, 0);
 				AgregarArista(verticeB + litros, verticeA + litros - distancia, 0);
@@ -116,7 +121,7 @@ int main(int argc, char** argv) {
 		generarVecinos(n2);
 	}
 
-	TransformarGrafoLineal(m2, n2, precios, mOriginal);
+	TransformarGrafoLineal(m2, n2, precios, mOriginal, nOriginal);
 
 	cout << "vertices generados: " << n2 << " aristas generadas: " << m2 << endl;
 
