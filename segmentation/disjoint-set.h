@@ -1,6 +1,8 @@
 #ifndef __DISJOINT_SET_H__
 #define __DISJOINT_SET_H__
 
+#include <cstdint>
+
 extern "C" {
 
 typedef void disjoint_set;
