@@ -15,8 +15,9 @@ clean:
 %.test: casos/%.test
 
 #TODO: Ver como comprar salida con ciudad.out
-casos/%.test: $(BINARIOS) casos/%.in casos/%.out
+ver_%: $(BINARIOS) casos/%.in
 	@for exe in $(BINARIOS); do \
-		echo $$(./$$exe < casos/$*.in); \
+		./$$exe < casos/$*.in; \
 	done;
 
+.PHONY: ver_%

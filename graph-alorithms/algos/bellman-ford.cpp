@@ -7,7 +7,6 @@
 const char* algo = __FILE__;
 using namespace std;
 
-using Distancias = vector<uint32_t>;
 Costes resultado;
 
 Distancias bellmanFord(ListaDeAristas& g, uint32_t n, uint32_t m, uint32_t v_origen) {

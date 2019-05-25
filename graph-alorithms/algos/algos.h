@@ -21,8 +21,11 @@ using ListaDeVecinos = vector<vector<pair<uint32_t, uint32_t>>>;
 /* Matriz[desde][hasta] = peso */
 using Matriz = vector<vector<uint32_t>>;
 
+/* Distancias[hasta|] = costo */
+using Distancias = vector<uint32_t>;
+
 /* Costes[desde][hasta] = costo */
-using Costes = vector<vector<uint32_t>>;
+using Costes = vector<Distancias>;
 
 /* Esta es la cantidad de estados del tanque. 0 a 60 litros de carga. */
 const int MAX_NAFTA = 61;

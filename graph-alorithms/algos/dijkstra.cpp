@@ -1,12 +1,8 @@
+#include <iostream>
+
 #include "algos.h"
 
-#include <iostream>
-#include <queue>
-
 using namespace std;
-
-using Arista = tuple<uint32_t, uint32_t, uint32_t>;
-using Distancias = vector<uint32_t>;
 
 const char* algo = __FILE__;
 
@@ -17,6 +13,7 @@ uint32_t sigVertice(const Distancias& dist, vector<bool>& visitados, uint32_t n)
 	uint32_t v = 0;
 	uint32_t min = UINT32_MAX;
 
+	
 	for(int i = 0; i < n; i++) {
 		if(!visitados[i] && dist[i] < min) {
 			v = i;

@@ -96,7 +96,8 @@ int main(int argc, char** argv) {
 	if(floydWarshallDir.compare(algo) == 0)
 		generarMatriz(n2);
 
-	if(dijkstraDir.compare(algo) == 0)
+	if(dijkstraDir.compare(algo) == 0
+		|| pqDijkstraDir.compare(algo) == 0)
 		generarVecinos(n2);
 
 	TransformarGrafo(m2, n2, precios, mOriginal);
