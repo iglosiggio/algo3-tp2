@@ -1,0 +1,10 @@
+graph ciudades {
+	rankdir=LR
+
+	A [label="A\ncosto: 50"]
+	B [label="B\ncosto: 10"]
+	C [label="C\ncosto: 20"]
+
+	A -- B [label=" 5"]
+	A -- C [label=" 15"]
+}

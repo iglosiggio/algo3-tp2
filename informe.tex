@@ -1,46 +1,69 @@
 \documentclass[12pt]{article}
-\usepackage{lingmacros}
-\usepackage{tree-dvips}
+\usepackage[utf8]{inputenc}
+\usepackage{parskip}
+
+\usepackage[bottom]{footmisc}
+
+\usepackage{graphicx}
+
+\usepackage{subcaption}
+
+
 \begin{document}
 
-\section*{Notes for My Paper}
+\section*{(Parte 2) LLenalo con super}
 
-Don't forget to include examples of topicalization.
-They look like this:
+\subsection*{Presentación del problema}
+Dado un vendedor que cuenta con vehiculo propio que necesita moverse entre ciudades personalmente para vender sus productos, quiere buscar la manera más económica de realizar la tarea.
 
-{\small
-\enumsentence{Topicalization from sentential subject:\\ 
-\shortex{7}{a John$_i$ [a & kltukl & [el & 
-  {\bf l-}oltoir & er & ngii$_i$ & a Mary]]}
-{ & {\bf R-}clear & {\sc comp} & 
-  {\bf IR}.{\sc 3s}-love   & P & him & }
-{John, (it's) clear that Mary loves (him).}}
-}
+Teniendo en cuenta que las distancias entre ciudades estan representadas en kilometros y el precio de la nafta es por litro queremos minimizar el costo en nafta de llegar de cada ciudad a las demas teniendo en cuenta las siguientes propiedades: 
 
-\subsection*{How to handle topicalization}
+\begin{enumerate}
+    \item Las rutas que comunican las ciudades son bidireccionales.
+    \item El precio de la nafta varia de ciudad en ciudad.
+    \item El auto posee un limite de litros de nafta que puede cargar (60 litros).
+    \item Se estima que cada litro de nafta alcanza para exactamente un kilometro de distancia.
+\end{enumerate}
 
-I'll just assume a tree structure like (\ex{1}).
+El problema formalmente será representado como un grafo donde cada ciudad
+ $c_i$ es un vertice con su respectivo precio por litro $p_i$ y donde 
+ cada distancia $d_{x,y}$ que comunica un par de ciudades ($c_x, c_y$) son aristas.
 
-{\small
-\enumsentence{Structure of A$'$ Projections:\\ [2ex]
-\begin{tabular}[t]{cccc}
-    & \node{i}{CP}\\ [2ex]
-    \node{ii}{Spec} &   &\node{iii}{C$'$}\\ [2ex]
-        &\node{iv}{C} & & \node{v}{SAgrP}
-\end{tabular}
-\nodeconnect{i}{ii}
-\nodeconnect{i}{iii}
-\nodeconnect{iii}{iv}
-\nodeconnect{iii}{v}
-}
-}
+Representado el $r_k$ como un camino posible entre dos ciudades en función del costo efectivo
+comprendido como la cantidad de litros $l_i$ que cargue de nafta por su respectivo precio $p_i$ queremos los caminos que cumplen que:
 
-\subsection*{Mood}
+$\forall(c_x, c_y \in Ciudades)(r_{m}, r_k \in Caminos(c_x,c_y))\rightarrow(r_{m} < r_k)$
 
-Mood changes when $\sum_{i=0}^n i^3$ there is a topic, as well as when
-there is WH-movement.  \emph{Irrealis} is the mood when
-there is a non-subject topic or WH-phrase in Comp.
-\emph{Realis} is the mood when there is a subject topic
-or WH-phrase.
+Es decir nos interesan todos los caminos minimos.
+
+Una motivación razonable para resolver el problema sería entonces simplemente aplicar algoritmos conocidos de camino minimo, sin embargo esto no es posible.
+
+Para empezar el precio al estar en función de los vertices, los costes no dependen solo de las distancias, sino de una multiplicación entre litros cargados por el precio.
+
+Las rutas son bidireccionales, sin embargo dadas 2 ciudades $C_a$ y $C_b$ no se cumple que los costes $C_a \rightarrow C_b$ y $C_b \rightarrow C_a$ sean iguales.
+Por ejemplo:
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{{graficos/caminoSimple}.pdf}
+      \caption{$fig_1$ bidireccional.pdf}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[width=\linewidth]{{graficos/caminoSimple2}.pdf}
+      \caption{$fig_2$ direccional.pdf}
+    \end{subfigure}
+\end{figure}
+
+En particular $\forall(p_a \neq p_b) \rightarrow (p_a * d_{a,b} \neq p_b * d_{a,b}) $
+
+Además los caminos minimos no necesariamente son simples, por ejemplo en $fig.1$ se pueden observar 3 ciudades
+
+\begin{figure}
+    \includegraphics[width=0.7\textwidth]{{graficos/caminoNoSimple}.pdf}
+\end{figure}
+
+
+
 
 \end{document}

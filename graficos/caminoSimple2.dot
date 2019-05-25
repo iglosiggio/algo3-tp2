@@ -1,0 +1,6 @@
+digraph ciudades {
+	rankdir=LR
+
+	A -> B [label="30 * 5"]
+	B -> A [label="20 * 5"]
+}
