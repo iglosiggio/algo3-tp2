@@ -5,26 +5,26 @@
 #include <vector>
 #include <utility>
 #include <tuple>
-#include <cmath> 
+#include <cmath>
 #include <string>
+
+#define INFINITO (UINT32_MAX / 2)
 
 using namespace std;
 
-//aristas representadas como origen, destino, peso.
+/* ListaDeAristas[i] = { origen, destino, peso } */
 using ListaDeAristas = vector<tuple<uint32_t, uint32_t, uint32_t>>;
 
-//vecinos representados como claves origen -> pares(destino, peso)
+/* ListaDeVecinos[vertice][i] = { destino, peso } */
 using ListaDeVecinos = vector<vector<pair<uint32_t, uint32_t>>>;
 
-//matriz columna indica origen, fila indica destino, pos[origen][destino] el peso.
+/* Matriz[desde][hasta] = peso */
 using Matriz = vector<vector<uint32_t>>;
 
-
-//el resultado final se representa con esta estructura. En cada fila 3 valores.
+/* Costes[desde][hasta] = costo */
 using Costes = vector<vector<uint32_t>>;
 
-/* el máximo siempre lo entendemos como 1 más, ya que en el auto puede haber de 0 a 60 de nafta, 
- * es decir 61 posibles escenarios */
+/* Esta es la cantidad de estados del tanque. 0 a 60 litros de carga. */
 const int MAX_NAFTA = 61;
 
 extern const char* algo;
