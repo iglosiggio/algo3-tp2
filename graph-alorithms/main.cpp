@@ -35,40 +35,37 @@ void TransformarGrafo(uint32_t& m2, uint32_t n2, uint32_t* precios, uint32_t mOr
 		int32_t origen;
 		int32_t destino;
 		int32_t distancia;
-		int32_t litrosCargadosEnB = 0;
 
 		std::cin >> origen >> destino >> distancia;
 
-		for (int32_t verticeA = origen * MAX_NAFTA; verticeA < MAX_NAFTA * (origen + 1); verticeA++) {
-			int32_t litrosCargadosEnA = 0;
+		int32_t verticeA = origen * MAX_NAFTA;
+		int32_t verticeB = destino * MAX_NAFTA;
 
-			for (int32_t verticeB = destino * MAX_NAFTA; verticeB < MAX_NAFTA * (destino + 1); verticeB++) {
+		for (int32_t litrosEnA = 0; litrosEnA < MAX_NAFTA; litrosEnA++) {
 
-				if (distancia + litrosCargadosEnA < MAX_NAFTA && litrosCargadosEnA - distancia <= litrosCargadosEnB) {
+			for (int32_t litrosEnB = 0; litrosEnB < MAX_NAFTA; litrosEnB++) {
+
+				if (distancia + litrosEnB < MAX_NAFTA && litrosEnA - distancia <= litrosEnB) {
 					uint32_t costo = 0;
 
-					if(distancia + litrosCargadosEnA - litrosCargadosEnB >= 0)
-						costo = precios[origen] * (distancia + litrosCargadosEnA - litrosCargadosEnB);
+					if(distancia >= litrosEnA - litrosEnB)
+						costo = precios[origen] * (distancia + litrosEnB - litrosEnA);
 
-					AgregarArista(verticeA, verticeB, costo);
+					AgregarArista(verticeA + litrosEnA, verticeB + litrosEnB, costo);
 					m2++;
 				}
 
 				//las aristas tienen dirección, así que si puedo agregar uno, agrego el espejo con su respectivo costo.
-				if (distancia + litrosCargadosEnB < MAX_NAFTA && litrosCargadosEnB - distancia <= litrosCargadosEnA) {
+				if (distancia + litrosEnA < MAX_NAFTA && litrosEnB - distancia <= litrosEnA) {
 					uint32_t costo = 0;
 
-					if(distancia + litrosCargadosEnB - litrosCargadosEnA >= 0)
-						costo = precios[destino] * (distancia + litrosCargadosEnB - litrosCargadosEnA);
+					if(distancia >= litrosEnB - litrosEnA)
+						costo = precios[destino] * (distancia + litrosEnA - litrosEnB);
 
-					AgregarArista(verticeB, verticeA, costo);
+					AgregarArista(verticeB + litrosEnB, verticeA + litrosEnA, costo);
 					m2++;
 				}
-
-				litrosCargadosEnA++;
 			}
-
-			litrosCargadosEnB++;
 		}
 	}
 }
