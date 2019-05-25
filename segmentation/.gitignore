@@ -1,3 +1,4 @@
 *.algo
 main.o
 scripts/generar_ppm
+.gdb_history
