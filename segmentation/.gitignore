@@ -1,1 +1,3 @@
 *.algo
+main.o
+scripts/generar_ppm
