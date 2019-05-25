@@ -1,4 +1,3 @@
-#include <queue>
 #include <iostream>
 
 #include "algos.h"
@@ -35,7 +34,7 @@ Distancias pqDijkstra(ListaDeVecinos gVecinos, uint32_t n, uint32_t m, uint32_t 
 	return dist;
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas& gAristas, ListaDeVecinos& gVecinos, Matriz& matriz) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeVecinos& gVecinos, Matriz& matriz) {
 	for (uint32_t i = 0 ; i < nOriginal ; i++) {
 		int verticeTarget = i * MAX_NAFTA;
 		Distancias dcrudas = pqDijkstra(gVecinos, n, m, verticeTarget);

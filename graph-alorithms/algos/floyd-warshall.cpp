@@ -15,7 +15,7 @@ void floydWarshall(Matriz& matriz, uint32_t n) {
 					matriz[i][j] = matriz[i][k] + matriz[k][j];
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m2, ListaDeAristas& gAristas, ListaDeVecinos& gVecinos, Matriz& matriz) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m2, ListaDeVecinos& gVecinos, Matriz& matriz) {
 	floydWarshall(matriz, n);
 
 	for (uint32_t i = 0 ; i < nOriginal; i++){

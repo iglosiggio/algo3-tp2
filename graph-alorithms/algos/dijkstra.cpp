@@ -46,7 +46,7 @@ Distancias dijkstra(ListaDeVecinos gVecinos, uint32_t n, uint32_t m, uint32_t v_
 	return dist;
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas& gAristas, ListaDeVecinos& gVecinos, Matriz& matriz) {
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeVecinos& gVecinos, Matriz& matriz) {
 	/* Dijkstra da todas las distancias al origan, por lo que lo corremos n
 	 * veces. */
 	for (uint32_t i = 0 ; i < nOriginal ; i++) {

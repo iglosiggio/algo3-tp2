@@ -1,38 +1,44 @@
+#include <iostream>
+#include <stdint.h>
+
 #include "algos.h"
 
-#include <iostream>
-#include <algorithm>
-#include <stdint.h>
+
 
 const char* algo = __FILE__;
 using namespace std;
 
 Costes resultado;
 
-Distancias bellmanFord(ListaDeAristas& g, uint32_t n, uint32_t m, uint32_t v_origen) {
-	Distancias dist;
+Distancias bellmanFord(ListaDeVecinos& gVecinos, uint32_t n, uint32_t m, uint32_t v_origen) {
+	Distancias dist(n, INFINITO);
+	queue<uint32_t> q;
 
-	dist.resize(n, INFINITO);
 	dist[v_origen] = 0;
+	q.push(v_origen);
 
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			uint32_t origen = get<0>(g[j]);
-			uint32_t destino = get<1>(g[j]);
-			uint32_t peso = get<2>(g[j]);
+	while(!q.empty()) {
+		uint32_t v = q.front();
+		q.pop();
 
-			if (dist[origen] + peso < dist[destino])
-				dist[destino] = dist[origen] + peso;
+		for (int i = 0; i < gVecinos[v].size(); i++) {
+			uint32_t destino = gVecinos[v][i].first;
+			uint32_t peso = gVecinos[v][i].second;
+
+			if(dist[destino] > dist[v] + peso){
+				dist[destino] = dist[v] + peso;
+				q.push(destino);
+			}
 		}
 	}
 	return dist;
 }
 
-Costes ciudades(uint32_t nOriginal, uint32_t n2, uint32_t m2, ListaDeAristas& gAristas, ListaDeVecinos& gVecinos, Matriz& matriz) {
+Costes ciudades(uint32_t nOriginal, uint32_t n2, uint32_t m2, ListaDeVecinos& gVecinos, Matriz& matriz) {
 
 	for(uint32_t i = 0 ; i < nOriginal ; i++){
 		int destino = i * MAX_NAFTA;
-		Distancias dcrudas = bellmanFord(gAristas, n2, m2, destino);
+		Distancias dcrudas = bellmanFord(gVecinos, n2, m2, destino);
 
 		for(uint32_t k = 0 ; k < nOriginal ; k++) {
 			/* Si mi iterador vertice es igual al original la dist

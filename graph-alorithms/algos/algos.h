@@ -7,13 +7,12 @@
 #include <tuple>
 #include <cmath>
 #include <string>
+#include <queue>
+#include <algorithm>
 
 #define INFINITO (UINT32_MAX / 2)
 
 using namespace std;
-
-/* ListaDeAristas[i] = { origen, destino, peso } */
-using ListaDeAristas = vector<tuple<uint32_t, uint32_t, uint32_t>>;
 
 /* ListaDeVecinos[vertice][i] = { destino, peso } */
 using ListaDeVecinos = vector<vector<pair<uint32_t, uint32_t>>>;
@@ -32,6 +31,6 @@ const int MAX_NAFTA = 61;
 
 extern const char* algo;
 
-Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeAristas&, ListaDeVecinos&, Matriz&);
+Costes ciudades(uint32_t nOriginal, uint32_t n, uint32_t m, ListaDeVecinos&, Matriz&);
 
 #endif
