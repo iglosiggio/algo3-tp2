@@ -14,6 +14,7 @@ disjoint_set*	ds_new	(size_t size, float K);
 
 void	ds_union	(disjoint_set*, int a, int b, float diff, float K);
 int	ds_find		(disjoint_set*, int a);
+int	ds_size		(disjoint_set*, int a);
 float	ds_idiff	(disjoint_set*, int a);
 
 }

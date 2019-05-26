@@ -120,9 +120,19 @@ std::vector<Eje> generarEjes(int ancho, int alto, float* imagen) {
 	return ejes;
 }
 
+void limpiar_conjuntos(int min_size, std::vector<Eje>& ejes, disjoint_set* ds) {
+	for (Eje& eje: ejes) {
+		int size_a = ds_size(ds, eje.desde);
+		int size_b = ds_size(ds, eje.hasta);
+		if (size_a < min_size || size_b < min_size)
+			ds_union(ds, eje.desde, eje.hasta, 0, 0);
+	}
+}
+
 int main(int argc, char** argv) {
 	float K = 600;
 	float sigma = 0.8;
+	float min_feature = -1;
 	int ancho;
 	int alto;
 	float* imagen;
@@ -131,6 +141,8 @@ int main(int argc, char** argv) {
 		K = std::stof(argv[1]);
 	if (argc >= 3)
 		sigma = std::stof(argv[2]);
+	if (argc >= 4)
+		min_feature = 1 / std::stof(argv[3]);
 
 	std::cin >> ancho >> alto;
 	imagen = new float[ancho * alto];
@@ -151,6 +163,9 @@ int main(int argc, char** argv) {
 	for (Eje& e : ejes)
 		if (misma_region(e, ds))
 			ds_union(ds, e.desde, e.hasta, e.peso, K);
+
+	if (min_feature > 0)
+		limpiar_conjuntos(ceil(ancho * alto * min_feature), ejes, ds);
 
 	/* Escribo */
 	for (int i = 0; i < ancho * alto; i++) {

@@ -39,6 +39,11 @@ void ds_union(disjoint_set* ds, int a, int b, float diff, float K) {
 	}
 }
 
+int ds_size(disjoint_set* ds, int a) {
+	a = ds_find(ds, a);
+	return (*ds)[a].tamanio;
+}
+
 float ds_idiff(disjoint_set* ds, int a) {
 	a = ds_find(ds, a);
 	return (*ds)[a].idiff;
