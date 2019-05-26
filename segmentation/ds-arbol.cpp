@@ -4,7 +4,7 @@
 struct componente {
 	int padre;
 	int tamanio;
-	int idiff;
+	float idiff;
 };
 
 using disjoint_set = std::vector<struct componente>;
@@ -20,7 +20,7 @@ int ds_find(disjoint_set* ds, int a) {
 	return padre == -1 ? a : ds_find(ds, padre);
 }
 
-void ds_union(disjoint_set* ds, int a, int b, uint8_t diff) {
+void ds_union(disjoint_set* ds, int a, int b, float diff) {
 	a = ds_find(ds, a);
 	b = ds_find(ds, b);
 
@@ -39,7 +39,7 @@ void ds_union(disjoint_set* ds, int a, int b, uint8_t diff) {
 	}
 }
 
-int ds_idiff(disjoint_set* ds, int a, int K) {
+float ds_idiff(disjoint_set* ds, int a, float K) {
 	a = ds_find(ds, a);
 	struct componente Ca = (*ds)[a];
 	return Ca.idiff + K / Ca.tamanio;

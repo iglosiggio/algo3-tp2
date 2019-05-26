@@ -11,5 +11,5 @@ formatear() {
 	xargs -n"$ancho"
 }
 
-convert "$1" -colorspace Gray -compress none -depth 8 pgm:- | sed '1d;3d' \
-	| formatear
+convert "$1" -colorspace gray -compress none -depth 8 pgm:- \
+	| sed '1d;3d' | formatear

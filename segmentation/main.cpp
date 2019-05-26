@@ -1,6 +1,9 @@
 #include <iostream>
 #include <vector>
+#include <utility>
+#include <algorithm>
 #include <cstdint>
+#include <cmath>
 
 #include "disjoint-set.h"
 
@@ -8,30 +11,26 @@
  * píxeles como idx = y * ancho + x. */
 
 #define MIN(x, y) ((x) > (y) ? (y) : (x))
+#define MAX(x, y) ((x) < (y) ? (y) : (x))
+#define DIFF(a, b) fabs((a) - (b))
+#define PIX(foto, x, y) (foto)[(y) * ancho + (x)]
 
-/* Eje: {desde, hasta} */
-using Eje = std::pair<int, int>;
+/* Eje: {desde, hasta, peso} */
+struct Eje {
+	int desde;
+	int hasta;
+	float peso;
+};
 
-/* TODO: K es constante ahora, estaría bueno probar variándolo */
-bool misma_region(Eje e, int diff, disjoint_set* ds, int K) {
-	int Ci = ds_idiff(ds, e.first, K);
-	int Cj = ds_idiff(ds, e.second, K);
-
-	return diff <= MIN(Ci, Cj);
+bool operator<(const Eje& a, const Eje& b) {
+	return a.peso < b.peso;
 }
 
-/* Devuelve `true` si pudo conseguir un eje y `false` si no quedan más ejes */
-bool siguiente_eje(std::vector<Eje> ejes[256], int* i, Eje* e) {
-		while (*i < 256 && ejes[*i].empty())
-			(*i)++;
+bool misma_region(Eje e, disjoint_set* ds, float K) {
+	float Ci = ds_idiff(ds, e.desde, K);
+	float Cj = ds_idiff(ds, e.hasta, K);
 
-		if (*i == 256)
-			return false;
-
-		*e = ejes[*i].back();
-		ejes[*i].pop_back();
-
-		return true;
+	return e.peso <= MIN(Ci, Cj);
 }
 
 /* NOTA: Leer directamente un uint8_t lee una letra, no un número,
@@ -42,60 +41,116 @@ uint8_t leer() {
 	return dato;
 }
 
+/* Chafado del paper original */
+#define GAUSSIAN_WIDTH 4
+void blur(int ancho, int alto, float* imagen, float sigma) {
+	sigma = MAX(sigma, 0.01);
+
+	/* Crear la máscara */
+	int width = ceil(GAUSSIAN_WIDTH * sigma) + 1;
+	float sum = 0;
+	std::vector<float> mask(width);
+
+	/* Cargo la máscara */
+	for (int i = 0; i < width; i++)
+		sum += mask[i] = exp(-0.5 * (i/sigma) * (i/sigma));
+	sum = 2 * sum - 1;
+
+	/* Normalizo la máscara */
+	for (int i = 0; i < width; i++)
+		mask[i] /= sum;
+
+	/* Hago la convolución en el eje X */
+	for (int y = 0; y < alto; y++)
+		for (int x = 0; x < ancho; x++) {
+			float sum = PIX(imagen, x, y);
+
+			for (int i = 1; i < width; i++)
+				sum += mask[i] * (
+					PIX(imagen, MAX(x - i, 0), y)
+					+ PIX(imagen, MIN(x + i, ancho - 1), y)
+				);
+
+			PIX(imagen, x, y) = sum;
+		}
+
+	/* Hago la convolución en el eje Y */
+	for (int y = 0; y < alto; y++)
+		for (int x = 0; x < ancho; x++) {
+			float sum = mask[0] * PIX(imagen, x, y);
+
+			for (int i = 1; i < width; i++)
+				sum += mask[i] * (
+					PIX(imagen, x, MAX(y - i, 0))
+					+ PIX(imagen, x, MIN(y + i, alto - 1))
+				);
+
+			PIX(imagen, x, y) = sum;
+		}
+}
+
 int main(int argc, char** argv) {
-	int K = 600;
+	float K = 600;
+	float sigma = 0.8;
 	int ancho;
 	int alto;
-	uint8_t* imagen;
-	std::vector<Eje> ejes[256];
+	float* imagen;
+	std::vector<Eje> ejes;
 
-	if (argc == 2)
-		K = std::stoi(argv[1]);
+	if (argc >= 2)
+		K = std::stof(argv[1]);
+	if (argc >= 3)
+		sigma = std::stof(argv[2]);
 
 	std::cin >> ancho >> alto;
-	imagen = new uint8_t[ancho * alto];
+	imagen = new float[ancho * alto];
 
-	/* Leemos la primera línea que tiene un sólo tipo de aristas */
-	imagen[0] = leer();
-	for (int i = 1; i < ancho; i++) {
+	for (int i = 0; i < ancho * alto; i++)
 		imagen[i] = leer();
-		uint8_t peso_w = abs(imagen[i-1] - imagen[i]);
-		ejes[peso_w].emplace_back(i-1, i);
+
+	blur(ancho, alto, imagen, sigma);
+
+	/* Transformamos la primera línea que tiene un sólo tipo de aristas */
+	for (int i = 1; i < ancho; i++) {
+		float peso_w = DIFF(imagen[i-1], imagen[i]);
+		ejes.push_back({i-1, i, peso_w});
 	}
 
-	/* Leemos el resto de la foto */
+	/* Transformamos el resto de la foto */
 	for (int i = ancho; i < ancho * alto; i++) {
-		imagen[i] = leer();
 
 		/* Estas aristas requieren que el píxel no sea el primero de la
 		 * fila */
 		if (i % ancho) {
-			uint8_t peso_w = abs(imagen[i-1] - imagen[i]);
-			ejes[peso_w].emplace_back(i-1, i);
-			uint8_t peso_nw = abs(imagen[i-1 - ancho] - imagen[i]);
-			ejes[peso_nw].emplace_back(i-1 - ancho, i);
+			float peso_w = DIFF(imagen[i-1], imagen[i]);
+			ejes.push_back({i-1, i, peso_w});
+			float peso_nw = DIFF(imagen[i-1 - ancho], imagen[i]);
+			ejes.push_back({i-1 - ancho, i, peso_nw});
 		}
 
-		uint8_t peso_n = abs(imagen[i - ancho] - imagen[i]);
-		ejes[peso_n].emplace_back(i - ancho, i);
+		float peso_n = DIFF(imagen[i - ancho], imagen[i]);
+		ejes.push_back({i - ancho, i, peso_n});
 
 		/* Esta arista requiere que el píxel no sea el último de la
 		 * fila */
 		if ((i + 1) % ancho) {
-			uint8_t peso_ne = abs(imagen[i+1 - ancho] - imagen[i]);
-			ejes[peso_ne].emplace_back(i+1 - ancho, i);
+			float peso_ne = DIFF(imagen[i+1 - ancho], imagen[i]);
+			ejes.push_back({i+1 - ancho, i, peso_ne});
 		}
 	}
 
+	/* Ordeno */
+	std::sort(ejes.begin(), ejes.end());
+
 	disjoint_set* ds = ds_new(ancho * alto);
 
-	int diff = 0;
-	Eje e;
-	while(siguiente_eje(ejes, &diff, &e))
-		if (misma_region(e, diff, ds, K))
-			ds_union(ds, e.first, e.second, diff);
+	/* Segmento */
+	for (Eje& e : ejes)
+		if (misma_region(e, ds, K))
+			ds_union(ds, e.desde, e.hasta, e.peso);
 
-	for(int i = 0; i < ancho * alto; i++) {
+	/* Escribo */
+	for (int i = 0; i < ancho * alto; i++) {
 		std::cout << ds_find(ds, i);
 
 		if ((i + 1) % ancho)
@@ -106,4 +161,3 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-

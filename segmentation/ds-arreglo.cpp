@@ -5,7 +5,7 @@
 struct componente {
 	std::vector<int> nodos;
 	int padre;
-	int idiff;
+	float idiff;
 };
 
 
@@ -29,7 +29,7 @@ int ds_find(disjoint_set* ds, int a) {
 	return (*ds)[a].padre; 
 }
 
-void ds_union(disjoint_set* ds, int a, int b, uint8_t diff) {
+void ds_union(disjoint_set* ds, int a, int b, float diff) {
 	a = ds_find(ds, a);
 	b = ds_find(ds, b);
 
@@ -52,7 +52,7 @@ void ds_union(disjoint_set* ds, int a, int b, uint8_t diff) {
 	}
 }
 
-int ds_idiff(disjoint_set* ds, int a, int K) {
+float ds_idiff(disjoint_set* ds, int a, float K) {
 	a = ds_find(ds, a);
 	struct componente& Ca = (*ds)[a];
 	return Ca.idiff + K / Ca.nodos.size();

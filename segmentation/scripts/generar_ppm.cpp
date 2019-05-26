@@ -1,6 +1,22 @@
 #include <iostream>
+#include <unordered_map>
+#include <cstdint>
 
-#define BYTE(v, i) (((v) >> (i)) & 0xFF)
+struct color {
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+
+	color() {
+		r = random();
+		g = random();
+		b = random();
+	}
+};
+
+void print_color(struct color c) {
+	std::cout << (int) c.r << ' ' << (int) c.g << ' ' << ' ' << (int) c.b;
+}
 
 int main(int argc, char** argv) {
 	if (argc != 3) {
@@ -9,6 +25,7 @@ int main(int argc, char** argv) {
 	}
 	int ancho = std::stoi(argv[1]);
 	int alto = std::stoi(argv[2]);
+	std::unordered_map<int, struct color> colores;
 	int C;
 
 	std::cout << "P3" << std::endl;
@@ -17,8 +34,7 @@ int main(int argc, char** argv) {
 
 	for (int i = 0; i < ancho * alto; i++) {
 		std::cin >> C;
-		std::cout << BYTE(C, 0) << ' ' << BYTE(C, 1) << ' '
-			  << BYTE(C, 2);
+		print_color(colores[C]);
 
 		if ((i + 1) % ancho)
 			std::cout << std::endl;
