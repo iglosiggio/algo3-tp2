@@ -25,5 +25,7 @@ salidas/$(BLUR).%.$(K).png: salidas/$(BLUR).%.$(K).txt scripts/generar_ppm
 ver_%: salidas/$(BLUR).%.$(K).png
 	feh $^
 
+ver_todo: $(subst entradas-posta/,ver_,$(wildcard entradas-posta/*))
+
 .PHONY: all clean ver_%
 .PRECIOUS: salidas/$(BLUR).%.$(K).txt salidas/$(BLUR).%.$(K).png entradas/%.txt
