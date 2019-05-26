@@ -2,12 +2,16 @@
 #include <unordered_map>
 #include <cstdint>
 
+/* La componente actual */
+int C;
+
 struct color {
 	uint8_t r;
 	uint8_t g;
 	uint8_t b;
 
 	color() {
+		srand(C);
 		r = random();
 		g = random();
 		b = random();
@@ -26,7 +30,6 @@ int main(int argc, char** argv) {
 	int ancho = std::stoi(argv[1]);
 	int alto = std::stoi(argv[2]);
 	std::unordered_map<int, struct color> colores;
-	int C;
 
 	std::cout << "P3" << std::endl;
 	std::cout << ancho << ' ' << alto << std::endl;
