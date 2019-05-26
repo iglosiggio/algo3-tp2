@@ -12,8 +12,8 @@ using disjoint_set = std::vector<struct componente>;
 
 extern "C" {
 
-disjoint_set* ds_new(size_t size) {
-	return new disjoint_set(size, {-1, 1, 0});
+disjoint_set* ds_new(size_t size, float K) {
+	return new disjoint_set(size, {-1, 1, K});
 }
 
 int ds_find(disjoint_set* ds, int a) {
@@ -25,7 +25,7 @@ int ds_find(disjoint_set* ds, int a) {
 	return padre = ds_find(ds, padre);
 }
 
-void ds_union(disjoint_set* ds, int a, int b, float diff) {
+void ds_union(disjoint_set* ds, int a, int b, float diff, float K) {
 	a = ds_find(ds, a);
 	b = ds_find(ds, b);
 
@@ -40,14 +40,13 @@ void ds_union(disjoint_set* ds, int a, int b, float diff) {
 
 		Cb->padre = a;
 		Ca->tamanio += Cb->tamanio;
-		Ca->idiff = diff;
+		Ca->idiff = diff + K / Ca->tamanio;
 	}
 }
 
-float ds_idiff(disjoint_set* ds, int a, float K) {
+float ds_idiff(disjoint_set* ds, int a) {
 	a = ds_find(ds, a);
-	struct componente Ca = (*ds)[a];
-	return Ca.idiff + K / Ca.tamanio;
+	return (*ds)[a].idiff;
 }
 
 }
