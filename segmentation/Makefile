@@ -25,7 +25,7 @@ salidas/$(BLUR).%.$(K).$(MIN).png: salidas/$(BLUR).%.$(K).$(MIN).txt \
 	scripts/salida2foto.sh $^ > $@
 
 ver_%: salidas/$(BLUR).%.$(K).$(MIN).png
-	feh $^
+	xdg-open $^
 
 ver_todo: $(subst entradas-posta/,ver_,$(wildcard entradas-posta/*))
 
