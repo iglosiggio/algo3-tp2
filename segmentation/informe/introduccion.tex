@@ -1,3 +1,55 @@
-\subsection{Segmentación de imágenes (qué, cómo y por qué)
+\subsection{Introducción a la Segmentación de imágenes y presentación del
+trabajo realizado}
 
-Tengo que decir cosas acá pero no tengo nada para decir ahora :(
+La segmentación de imágenes de forma es un problema abierto en el área de
+\emph{visión artificial} que dada la variedad de sus aplicaciones posee varios
+intereses en conflicto al querer desarrollar un algoritmo definitivo para ésta.
+Un algoritmo eficiente que requiera tiempo y memoria lineal puede ser útil para
+procesamiento de video en tiempo real sacrificando la calida del resultado,
+mientras que otro enfoque más costoso puede ser útil a la hora de ofrecer una
+herramienta que facilite labores artísticos (separación automática de los
+objetos en una escena, por ejemplo).
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/entradas-posta/oso}
+		\caption{Oso}
+	\end{subfigure}
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/salidas/{0.8.oso.jpg.600.100}.png}
+		\caption{$\sigma = 0.8,\ k = 600,\ g = 100$}
+	\end{subfigure}
+\end{figure}
+
+El algoritmo a implementar es el propuesto por \textbf{Pedro F.  Felzenszwalb}
+y \textbf{Daniel P. Huttenlocher} en su trabajo \textsc{Efficient Graph-Based
+Image Segmentation}. Éste algoritmo construye un grafo grilla con cada píxel en
+su propio segmento y luego uno los segmentos golosamente dada una condición de
+``similaridad suficente'' entre ellos. Para mejorar los resultados del
+algoritmo se implementaron dos pasos de pre y post procesamiento.
+
+El preprocesamiento consiste de un desenfoque gaussiano de dos pasadas. Éste se
+implementó dentro del programa entregado luego de notar que desenfocar la
+imagen y luego guardarla en el formato de entrada propuesto por la cátedra
+resultaba en artefactos indeseables propios del bajo rango de valores de cada
+pixel. El sigma de desenfoque puede ser modificando variando el segundo
+parámetro pasado al ejecutable.
+
+El postprocesamiento es una segunda pasada por las aristas del grafo forzando
+la unión de todos los componentes suficientemente chicos. El significado de
+``suficientemente chico'' se puede modificar variando el tercer parámetro
+pasado al ejecutable. El parámetro es relativo a la resolución de la imagen a
+procesar, un valor de $1$ eliminará todas las componentes que posean menos del
+$100\%$ de los píxeles, uno de $10$ todas las que posean menos del $10\%$.
+Llamaremos $d$ a este parámetro dado que cuanto mayor es su valor mayor es la
+cantidad de \emph{detalles} de la segmentación resultante.
+
+El algoritmo en sí posee un valor $k$ que representa la ``soltura'' a la hora
+de comparar componentes para decidir si unirlas o no. Éste parámetro es el
+primero que recibe el ejecutable entregado.
+
+La elección de colores para las segmentaciones mostradas en este informe se
+realizó aprovechándose de detalles implementativos. Esta elección nos permite
+que los colores sean estables al variar tanto $k$ cómo $d$, lo cuál permitió
+crear los videos adjuntos a este informe.
