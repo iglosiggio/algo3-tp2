@@ -1,5 +1,5 @@
 .vscode
-informe.aux
+*.aux
 informe.fdb_latexmk
 informe.fls
 informe.log
