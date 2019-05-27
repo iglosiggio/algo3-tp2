@@ -1,0 +1,55 @@
+\subsection{Presentación informal e intuitiva del algoritmo}
+
+El algoritmo implementado construye un \emph{grafo grilla} a partir de la
+imagen proporcionada y luego recorre las aristas del mismo de menor a mayor
+uniendo las compomentes de cada lado de la arista. La motivación es simple,
+procesar los píxeles más similares al principio nos forzará a recorrer las
+regiones de la imagen desde las de menos variabilidad hasta las que sean
+básicamente ruido blanco.
+
+Para tomar la decisión de si unir o no dos componentes se propone calcular la
+\emph{diferencia interna} de una componente de la siguiente forma:
+
+$$Int(C) = \max_{a \in AGM(C_V, C_E)} p(a)$$
+
+Dónde $AGM(V, E)$ es el árbol generador mínimo del subgrafo de la componente
+$C$, $C_V$ son los vértices de la componente V, $C_E$ son los ejes de la
+componente $C$ y $p(e)$ es la función que determina el peso de una
+arista\footnote{ Dependiendo el espacio de color de la imagen y la forma en la
+que se representen los mismos puede haber muchas funciones que tenga sentido
+evaluar como $p$.}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.9\linewidth]{graficos/grilla}
+	\caption{Grafo grilla con 8-vecindad.}
+\end{figure}
+
+Dado todo esto, dos componentes que limiten en un par de píxeles se unirán si
+la diferencia en el límite está dentro de la tolerancia común de las mismas, es
+decir si $\textit{diff} \geq Int(C_1) + \tau(C_1) \land \textit{diff} \geq
+Int(C_2) + \tau(C_2)$, dónde $\tau(C)$ es la función que le da juego\footnote{
+En el sentido de que suma cierta holgura que permite unir componentes de que
+otro parecerían demasiado distintas, cosa que es común con componentes
+pequeñas} a la componente. La función propuesta para $\tau(C)$ es la siguiente:
+
+$$\tau(C) = \frac{K}{|C_V|}$$
+
+La que nos ofrece un valor cercano a $K$ para compontentes muy chicas y uno
+cercano a $0$ para componentes muy grandes. Ésto fuerza a tener evidencias
+claras de que dos componentes son en realidad la misma al ser estas muy grandes
+pero nos permite un montón de juego en las primeras etapas.
+
+\subsubsection{Entonces. ¿Cuál es el algoritmo aquí propuesto?}
+
+Construiremos una primera aproximación burda (ubicando cada píxel en su propia
+componente) y lo refinaremos preguntándonos si dado un par de componentes
+unidas por un eje éstas no deberían en realidad unirse. A la hora de ejecutar
+un algorimo así de goloso es importante el orden en el cuál se toman las
+aristas a procesar el obvio (y el utilizado por nosotros) es de menor a mayor
+peso\footnote{ En una implementación que requiera un tiempo de procesamiento
+lineal se puede utilizar un \emph{Counting Sort} sabiendo cuál es la mayor
+diferencia posible (256 en el caso de la entrada de la cátedra). Sacrificando
+cierta precisión numérica claro está.}.
+
+TODO: Contar con fotitos qué hace el algoritmo
