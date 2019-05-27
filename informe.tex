@@ -3,10 +3,11 @@
 \usepackage{parskip}
 
 \usepackage[bottom]{footmisc}
+\usepackage{titlesec}
 
 \usepackage{graphicx}
-
 \usepackage{subcaption}
+\usepackage{wrapfig}
 
 
 \begin{document}
@@ -15,59 +16,114 @@
 \input{segmentation/informe/introduccion}
 \input{segmentation/informe/informal}
 
-\section{Llenalo con super}
+\section*{(Parte 2) LLenalo con super}
 
-\subsection*{Presentación del problema}
+\subsection*{Presentación informal del problema}
 Dado un vendedor que cuenta con vehiculo propio que necesita moverse entre ciudades personalmente para vender sus productos, quiere buscar la manera más económica de realizar la tarea.
 
-Teniendo en cuenta que las distancias entre ciudades estan representadas en kilometros y el precio de la nafta es por litro queremos minimizar el costo en nafta de llegar de cada ciudad a las demas teniendo en cuenta las siguientes propiedades: 
+Si la distancias entre ciudades estan representadas en kilometros y el precio de la nafta es por litro queremos minimizar el costo en nafta de llegar de cada ciudad a las demas teniendo en cuenta las siguientes propiedades: 
 
 \begin{enumerate}
-    \item Las rutas que comunican las ciudades son bidireccionales.
-    \item El precio de la nafta varia de ciudad en ciudad.
-    \item El auto posee un limite de litros de nafta que puede cargar (60 litros).
-    \item Se estima que cada litro de nafta alcanza para exactamente un kilometro de distancia.
+	\item Las rutas que comunican las ciudades son bidireccionales.
+	\item El precio de la nafta varia de ciudad en ciudad.
+	\item El auto posee un limite de litros de nafta que puede cargar (60 litros).
+	\item Se estima que cada litro de nafta alcanza para exactamente un kilometro de distancia.
 \end{enumerate}
 
-El problema formalmente será representado como un grafo donde cada ciudad
- $c_i$ es un vertice con su respectivo precio por litro $p_i$ y donde 
- cada distancia $d_{x,y}$ que comunica un par de ciudades ($c_x, c_y$) son aristas.
+El problema formalmente será representado como un grafo donde cada ciudad $c_i$ es un vertice con su respectivo precio por litro $p_i$ y donde cada distancia $d_{x,y}$ que comunica un par de ciudades ($c_x, c_y$) son las $m$ aristas del grafo.
 
-Representado el $r_k$ como un camino posible entre dos ciudades en función del costo efectivo
-comprendido como la cantidad de litros $l_i$ que cargue de nafta por su respectivo precio $p_i$ queremos los caminos que cumplen que:
+Representado el $r_k$ como un camino posible entre dos ciudades en función del costo efectivo comprendido como la cantidad de litros $l_i$ que cargue de nafta por su respectivo precio $p_i$ queremos los caminos que cumplen que:
 
 $\forall(c_x, c_y \in Ciudades)(r_{m}, r_k \in Caminos(c_x,c_y))\rightarrow(r_{m} < r_k)$
 
 Es decir nos interesan todos los caminos minimos.
 
-Una motivación razonable para resolver el problema sería entonces simplemente aplicar algoritmos conocidos de camino minimo, sin embargo esto no es posible.
+Una motivación razonable para resolver el problema sería entonces simplemente aplicar algoritmos conocidos de camino minimo, sin embargo esto no es posible con el grafo original.
 
 Para empezar el precio al estar en función de los vertices, los costes no dependen solo de las distancias, sino de una multiplicación entre litros cargados por el precio.
 
 Las rutas son bidireccionales, sin embargo dadas 2 ciudades $C_a$ y $C_b$ no se cumple que los costes $C_a \rightarrow C_b$ y $C_b \rightarrow C_a$ sean iguales.
-Por ejemplo:
 
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[b]{0.4\linewidth}
-      \includegraphics[width=\linewidth]{{graficos/caminoSimple}.pdf}
-      \caption{$fig_1$ bidireccional.pdf}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.4\linewidth}
-      \includegraphics[width=\linewidth]{{graficos/caminoSimple2}.pdf}
-      \caption{$fig_2$ direccional.pdf}
-    \end{subfigure}
-\end{figure}
+Eso significa que necesitariamos una representación direccional si quisieramos hablar de costes efectivos. $Fig1, Fig2$ ilustran esta diferencia para 2 ciudades.
+
+\begin{minipage}{0.45\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{{graficos/bidireccional}.pdf}
+	\captionof{figure}{bidireccional}
+\end{minipage}
+\begin{minipage}{0.42\textwidth}
+	\centering
+	\includegraphics[width=\linewidth]{{graficos/direccional}.pdf}
+	\captionof{figure}{direccional}
+\end{minipage}
+
 
 En particular $\forall(p_a \neq p_b) \rightarrow (p_a * d_{a,b} \neq p_b * d_{a,b}) $
 
-Además los caminos minimos no necesariamente son simples, por ejemplo en $fig.1$ se pueden observar 3 ciudades
+Además los caminos minimos no necesariamente son simples, por ejemplo dadas 3 ciudades $C_a$, $C_b$ y $C_c$ y 2 rutas con distancia $d_{a,b}$ y $d_{a,c}$.
+
 
 \begin{figure}
-    \includegraphics[width=0.7\textwidth]{{graficos/caminoNoSimple}.pdf}
+	\includegraphics[width=0.5\textwidth]{{graficos/caminoNoSimple}.pdf}
+	\caption{Camino no simple}
 \end{figure}
 
+Tengo que si $p_a > p_b$ podría tener que evaluar si moverme allí para cargar nafta y volver es menos costoso, que ir directamente.
 
+En fig3 se ilustra un grafo donde el costo de ir de $C_A$ a $C_C$ directamente es $p_a * d_{a,c} = 750$.
+
+Mientras que el camino pasando por $C_b$ es:
+
+$C_a$ a $C_b$ a $C_a$ a $C_C$ = 450.
+
+Sin embargo esto motiva a analizar si existen transformaciones del grafo en la que aplicar algoritmos de camino minimo es posible.
+
+\subsubsection*{Pautas de diseño}
+
+El objetivo de este trabajo es plantear transformaciones de grafos que nos permitan aplicar algoritmos de camino minimo. Buscaremos establecer una cota de las dimensiones de nuestro nuevo grafo en función de la densidad y tamaño del grafo original.
+
+Someteremos nuestro grafo a diferentes experimentos buscando comparar entre diferentes algoritmos de camino minimo cual de ellos se ajusta mejor. No explicaremos algoritmos de camino minimo como Dijkstra, Bellman-ford o Floyd-Warshall, se entienden por conocidos.
+
+Finalmente Dijkstra, bellman-ford son algoritmos $1$ a $N$ (nodos), cuando nos refiramos a ellos como algoritmos $N$ a $N$, nos referimos justamente a ejecutarlos $N$ veces (Abordaremos este tema en detalle en secciones posteriores).
+
+\subsubsection*{Transformación del grafo}
+
+Lo que queremos es dado un grafo $V$, obtener todos sus costos efectivos minimos $R$ para cada $(C_i, C_j)$. Buscamos para resolver el problema 2 funciones. La primera una funciòn $f(V) = V'$ que convierta nuestro grafo en función del costo efectivo a un nuevo grafo en el cual si se puedan aplicar algoritmos de camino minimo. Luego buscamos una función $g(R') = R$ que sepa interpretar los resultados del nuevo grafo como solución del original y obtener los resultados de $V$ que nos interesan.
+
+Dadas ambas funciones los pasos que aplicaremos sobre un grafo V para obtener los resultados R que nos interesan son los siguientes:
+
+\begin{enumerate}
+	\item $V' := f(V)$
+	\item $R'$ := Algún algoritmo valido de camino minimo N a N.
+	\item $R := g(R')$
+\end{enumerate}
+
+Ahora bien partamos de la primera incognita, como generar una funciòn $f(V)$.
+
+Para lograr esta tarea, necesitamos eliminar la noción del precio ya que los algoritmos de camino minimo solo saben operar en funciòn del peso de las aristas. Además paso las aristas resultantes que debemos obtener serìa conveniente que esten en función del costo efectivo.
+
+Sabemos además que la cantidad de litros de nafta que puede llevar nuestro vehiculo esta acotada por una constante llamemos $W$ de 60 litros. 
+
+Debido a que W es acotado una estrategia razonable sería lograr que $f(V)$ dependa de esta constante, ya que la complejidad de un algoritmo de camino minimo $N$ a $N$ es $O(n^3)$, si incluimos el costo de la transformación sería $O(W * n^3)$ y si $W$ es constante no influiría en nuestra complejidad.
+
+Empezemos por redefinir los vertices, en $V'$ no puedo tener estados, no puedo estar en una ciudad $C_i$ con $X$ de nafta, y un precio $p_i$ para agregar litros.
+
+Lo primero que haremos será multiplicar cara vertice $C_i$ por W estados posibles\footnote{Si $(W = 60)$ los estados son $61$, puedo estar en $C_i$ con: (0..60) lirtros de nafta.} entonces si:
+
+$V$ posee  N nodos. 
+
+$V'$ posee N * 61 tal que si $C_i$ es nodo en V $\rightarrow$ $\exists$ $\sum_{k=0}^{W} C'_{i * k}$ nodos en $V'$
+
+por notación llamaremos $C'_{i_0}$ a $C'_{i_{60}}$ a nuestros vertices en $V'$, ahora bien necesitamos redefinir nuestras aristas en función del costo efectivo.
+
+Dado que nuestra transformación tiene $W$ estados que representan un mismo nodo necesitaremos aristas para movernos entre dichos estados, si razonamos que para ir $C'_{i_0}$ a $C'_{i_1}$ es exactamente agregar un litro de nafta es trivial asumir que en general tendremos que dado un estado $C'_{i_k}$ el costo para ir a $C'_{i_{k+1}}$ será exactamente $p_i$.
+
+Es decir de momento nuestra transformaciòn tiene  $N * (W - 1$) aristas para movernos entre los estados $C'_{i_k}$
+
+Lo siguiente que haremos serà redefinir como son las conexiones entre los nodos, por cada $d_{i,j} \in m$ de $V$
+
+
+TODO: Terminar transformación, armar dem de correctitud y experimentación.
 
 
 \end{document}
