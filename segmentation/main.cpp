@@ -36,10 +36,8 @@ bool misma_region(Eje e, disjoint_set* ds) {
 	return e.peso <= MIN(a, b);
 }
 
-/* NOTA: Leer directamente un uint8_t lee una letra, no un número,
- *       tenemos que leer un entero y convertirlo a uint8 */
-uint8_t leer() {
-	unsigned dato;
+float leer() {
+	float dato;
 	std::cin >> dato;
 	return dato;
 }
