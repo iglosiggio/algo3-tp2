@@ -10,12 +10,12 @@ básicamente ruido blanco.
 Para tomar la decisión de si unir o no dos componentes se propone calcular la
 \emph{diferencia interna} de una componente de la siguiente forma:
 
-$$Int(C) = \max_{a \in AGM(C_V, C_E)} p(a)$$
+\[Int(C) = \max_{a \in AGM(C_V, C_E)} p(a)\]
 
 Dónde $AGM(V, E)$ es el árbol generador mínimo del subgrafo de la componente
 $C$, $C_V$ son los vértices de la componente V, $C_E$ son los ejes de la
 componente $C$ y $p(e)$ es la función que determina el peso de una
-arista\footnote{ Dependiendo el espacio de color de la imagen y la forma en la
+arista\footnote{Dependiendo el espacio de color de la imagen y la forma en la
 que se representen los mismos puede haber muchas funciones que tenga sentido
 evaluar como $p$.}.
 
@@ -28,12 +28,12 @@ evaluar como $p$.}.
 Dado todo esto, dos componentes que limiten en un par de píxeles se unirán si
 la diferencia en el límite está dentro de la tolerancia común de las mismas, es
 decir si $\textit{diff} \geq Int(C_1) + \tau(C_1) \land \textit{diff} \geq
-Int(C_2) + \tau(C_2)$, dónde $\tau(C)$ es la función que le da juego\footnote{
+Int(C_2) + \tau(C_2)$, dónde $\tau(C)$ es la función que le da juego\footnote{\
 En el sentido de que suma cierta holgura que permite unir componentes de que
 otro parecerían demasiado distintas, cosa que es común con componentes
 pequeñas} a la componente. La función propuesta para $\tau(C)$ es la siguiente:
 
-$$\tau(C) = \frac{K}{|C_V|}$$
+\[\tau(C) = \frac{K}{|C_V|}\]
 
 La que nos ofrece un valor cercano a $K$ para compontentes muy chicas y uno
 cercano a $0$ para componentes muy grandes. Ésto fuerza a tener evidencias
@@ -46,10 +46,7 @@ Construiremos una primera aproximación burda (ubicando cada píxel en su propia
 componente) y lo refinaremos preguntándonos si dado un par de componentes
 unidas por un eje éstas no deberían en realidad unirse. A la hora de ejecutar
 un algorimo así de goloso es importante el orden en el cuál se toman las
-aristas a procesar el obvio (y el utilizado por nosotros) es de menor a mayor
-peso\footnote{ En una implementación que requiera un tiempo de procesamiento
+aristas a procesar. El obvio (y el utilizado por nosotros) es de menor a mayor
+peso\footnote{En una implementación que requiera un tiempo de procesamiento
 lineal se puede utilizar un \emph{Counting Sort} sabiendo cuál es la mayor
-diferencia posible (256 en el caso de la entrada de la cátedra). Sacrificando
-cierta precisión numérica claro está.}.
-
-TODO: Contar con fotitos qué hace el algoritmo
+diferencia posible (256 en el caso de la entrada de la cátedra).}.
