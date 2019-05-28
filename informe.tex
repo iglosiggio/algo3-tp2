@@ -16,9 +16,9 @@
 \input{segmentation/informe/introduccion}
 \input{segmentation/informe/informal}
 
-\section*{(Parte 2) LLenalo con super}
+\section{Llenalo con super}
 
-\subsection*{Presentación informal del problema}
+\subsection{Presentación informal del problema}
 Dado un vendedor que cuenta con vehiculo propio que necesita moverse entre ciudades personalmente para vender sus productos, quiere buscar la manera más económica de realizar la tarea.
 
 Si la distancias entre ciudades estan representadas en kilometros y el precio de la nafta es por litro queremos minimizar el costo en nafta de llegar de cada ciudad a las demas teniendo en cuenta las siguientes propiedades: 
@@ -78,7 +78,7 @@ $C_a$ a $C_b$ a $C_a$ a $C_C$ = 450.
 
 Sin embargo esto motiva a analizar si existen transformaciones del grafo en la que aplicar algoritmos de camino minimo es posible.
 
-\subsubsection*{Pautas de diseño}
+\subsubsection{Pautas de diseño}
 
 El objetivo de este trabajo es plantear transformaciones de grafos que nos permitan aplicar algoritmos de camino minimo. Buscaremos establecer una cota de las dimensiones de nuestro nuevo grafo en función de la densidad y tamaño del grafo original.
 
@@ -86,7 +86,7 @@ Someteremos nuestro grafo a diferentes experimentos buscando comparar entre dife
 
 Finalmente Dijkstra, bellman-ford son algoritmos $1$ a $N$ (nodos), cuando nos refiramos a ellos como algoritmos $N$ a $N$, nos referimos justamente a ejecutarlos $N$ veces (Abordaremos este tema en detalle en secciones posteriores).
 
-\subsubsection*{Transformación del grafo}
+\subsubsection{Transformación del grafo}
 
 Lo que queremos es dado un grafo $V$, obtener todos sus costos efectivos minimos $R$ para cada $(C_i, C_j)$. Buscamos para resolver el problema 2 funciones. La primera una funciòn $f(V) = V'$ que convierta nuestro grafo en función del costo efectivo a un nuevo grafo en el cual si se puedan aplicar algoritmos de camino minimo. Luego buscamos una función $g(R') = R$ que sepa interpretar los resultados del nuevo grafo como solución del original y obtener los resultados de $V$ que nos interesan.
 
