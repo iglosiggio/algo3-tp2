@@ -2,7 +2,7 @@ fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.600.100.png
 graficos_segmentacion=graficos/grilla.pdf
 tex_segmentacion=$(wildcard segmentation/informe/*.tex)
 
-graficos_cheapest=graficos/caminoSimple.pdf graficos/caminoSimple2.pdf \
+graficos_cheapest=graficos/bidireccional.pdf graficos/direccional.pdf \
 		  graficos/caminoNoSimple.pdf
 
 all: informe.pdf
