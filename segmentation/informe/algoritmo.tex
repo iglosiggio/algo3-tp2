@@ -1,0 +1,61 @@
+\subsection{El algoritmo (y sus partes)}
+
+Los algoritmos acá mostrados usan todos alguna implementación de la estructura
+\textsc{Disjoint-Set} que posee los siguientes observadores y operaciones:
+
+\begin{itemize}
+	\item \Call{Nuevo}{$s$}
+		--- Retorna un nuevo \textsc{Disjoint-Set} con $s$ elementos.
+	\item \Call{Buscar}{ds, $e$}
+		--- Retorna el identificador de la componente de $e$.
+	\item \Call{Unir}{ds, $a$, $b$}
+		--- Une al componente que contiene a $a$ con el componente que
+		contiene a $b$.
+	\item \Call{Tamaño}{ds $e$}
+		--- Retorna el tamaño (en cantidad de elementos) de la
+		componente que contiene a $e$.
+\end{itemize}
+
+\subsubsection{Desenfoque}
+
+Tengo que escribir esto, la idea son sólo dos pasos: Armo la máscara y hago las
+dos convoluciones.
+
+\subsubsection{Construcción del grafo}
+
+Tengo que escribir esto, recorro pixel por pixel y agrego los ejes importantes.
+No necesito guardar los vértices del grafo porque cómo es conexo están
+implícitos en la lista de aristas.
+
+\subsubsection{Segmentación}
+
+El código importante. Recorro las aristas en orden y voy uniendo si vale la
+pena.
+
+\subsubsection{Simplificación Greedy}
+
+\begin{algorithm}[h]
+\caption{Algoritmo para eliminar segmentos pequeños}
+\begin{algorithmic}[1]
+\Statex{}
+\Function{Simplificar}{$w$, $h$, ds, grafo, $g$}
+	\State{} $\text{min} \is \frac{g}{w \times h}$
+	\For{$\text{eje} \in \text{grafo}$}
+		\If{$\Call{Tamaño}{\text{ds, eje}_a} < \text{min}
+		     \vee \Call{Tamaño}{\text{ds, eje}_b} < \text{min}$}
+			\State{} $C_a \is \Call{Buscar}{\text{ds, eje}_a}$
+			\State{} $C_b \is \Call{Buscar}{\text{ds, eje}_b}$
+			\If{$C_a \neq C_b$}
+				\State{} \Call{Unir}{ds, $C_a$, $C_b$}
+			\EndIf{}
+		\EndIf{}
+	\EndFor{}
+\EndFunction{}
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Combinación}
+
+Tengo que poner un título mejor, la idea es acá hacer que sean todas llamdaas a
+lo que describrí arriba y que sea una vista por arriba de los pasos del
+algoritmo.

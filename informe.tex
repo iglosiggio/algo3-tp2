@@ -9,12 +9,18 @@
 \usepackage{subcaption}
 \usepackage{wrapfig}
 
+\usepackage{mathtools}
+\def\is{\coloneqq}
+
+\usepackage{algorithm,algorithmicx}
+\usepackage[noend]{algpseudocode}
 
 \begin{document}
 
 \section{Segmentation is my fault}
 \input{segmentation/informe/introduccion}
 \input{segmentation/informe/informal}
+\input{segmentation/informe/algoritmo}
 
 \section{Llenalo con super}
 
@@ -93,9 +99,9 @@ Lo que queremos es dado un grafo $V$, obtener todos sus costos efectivos minimos
 Dadas ambas funciones los pasos que aplicaremos sobre un grafo V para obtener los resultados R que nos interesan son los siguientes:
 
 \begin{enumerate}
-	\item $V' := f(V)$
-	\item $R'$ := Algún algoritmo valido de camino minimo N a N.
-	\item $R := g(R')$
+	\item $V' \is f(V)$
+	\item $R' \is$ Algún algoritmo valido de camino minimo N a N.
+	\item $R \is g(R')$
 \end{enumerate}
 
 Ahora bien partamos de la primera incognita, como generar una funciòn $f(V)$.

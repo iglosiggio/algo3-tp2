@@ -42,8 +42,10 @@ la unión de todos los componentes suficientemente chicos. El significado de
 pasado al ejecutable. El parámetro es relativo a la resolución de la imagen a
 procesar, un valor de $1$ eliminará todas las componentes que posean menos del
 $100\%$ de los píxeles, uno de $10$ todas las que posean menos del $10\%$.
-Llamaremos $d$ a este parámetro dado que cuanto mayor es su valor mayor es la
-cantidad de \emph{detalles} de la segmentación resultante.
+Llamaremos $g$ a este parámetro dado que cuanto mayor es su valor mayor es la
+\emph{granularidad} de la segmentación resultante\footnote{Efectivamente el
+parámetro pone un límite superior a la cantidad de segmentos que puede tener la
+segmentación.}.
 
 El algoritmo en sí posee un valor $k$ que representa la ``soltura'' a la hora
 de comparar componentes para decidir si unirlas o no. Éste parámetro es el
@@ -51,5 +53,5 @@ primero que recibe el ejecutable entregado.
 
 La elección de colores para las segmentaciones mostradas en este informe se
 realizó aprovechándose de detalles implementativos. Esta elección nos permite
-que los colores sean estables al variar tanto $k$ cómo $d$, lo cuál permitió
+que los colores sean estables al variar tanto $k$ cómo $g$, lo cuál permitió
 crear los videos adjuntos a este informe.
