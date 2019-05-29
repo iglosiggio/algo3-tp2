@@ -50,3 +50,25 @@ aristas a procesar. El obvio (y el utilizado por nosotros) es de menor a mayor
 peso\footnote{En una implementación que requiera un tiempo de procesamiento
 lineal se puede utilizar un \emph{Counting Sort} sabiendo cuál es la mayor
 diferencia posible (256 en el caso de la entrada de la cátedra).}.
+
+Entonces, sumando todos los procesos antes mencionados podemos construir una
+suerte de vista aérea de nuestro algoritmo (que nos será útil para luego
+ahondar en la implementación de cada parte).
+
+\begin{enumerate}
+	\item Cargar la entrada
+	\item \textbf{Opcional:} Realizar un desenfoque para evitar
+	      ciertos defectos.
+	\item Construir el grafo grilla de la entrada, usando la diferencia
+	      de intensidades entre píxeles vecinos como peso de cada arista.
+	\item Ordenar las aristas construídas por peso.
+	\item Construir la solución inicial, asignando a cada píxel (vértice
+	      del grafo) en supropia componente.
+	\item Por cada arista (de menor a mayor) determinar si los píxeles que
+	      une deberían pertenecer a la misma componente. Si es así unirlos.
+	\item \textbf{Opcional:} Por cada arista (de menor a mayor) si alguna
+	      de las componentes que une es menor al $\frac{100}{g}\%$ de la
+	      imagen entonces unir éstas.
+	\item Imprimir la salida en el formato deseado, construir colores de
+	      ser necesario, etc.
+\end{enumerate}
