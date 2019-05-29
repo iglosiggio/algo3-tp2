@@ -7,10 +7,12 @@ n="$1"
 m="$2"
 seed_a="$3"
 
-for i in $(seq 1 5); do
+
+
+for i in $(seq 1 25); do
 	# Experimento A
 	script=$generar_a
 	seed=$seed_a
-	archivo="$casos/exp.n$n.m$m.i$i"
-	./$script $n $m "$((i + seed))" > "$archivo.in"
+	archivo="$casos/expA.n$n.m"$((m+n))".i$i"
+	./$script $n $((m+1)) "$((i + seed))" > "$archivo.in"
 done
