@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
         return 0;
     }
     
-    if (m <= 0){
+    if (m < 0){
         cerr << "Las aristas tienen que vivir entre 0 y (n -1)"  << endl;
         return 0;
     }

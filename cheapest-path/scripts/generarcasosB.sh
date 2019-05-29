@@ -13,6 +13,6 @@ for i in $(seq 1 25); do
 	# Experimento A
 	script=$generar_b
 	seed=$seed_a
-	archivo="$casos/expB.n$n.m"$((m+n))".i$i"
+	archivo="$casos/expB.n$n.i$i"
 	./$script $n $((m+1)) "$((i + seed))" > "$archivo.in"
 done

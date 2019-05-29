@@ -121,17 +121,16 @@ int main(int argc, char** argv) {
 		generarVecinos(n2);
 	}
 
-	TransformarGrafoLineal(m2, n2, precios, mOriginal, nOriginal);
 
 	auto start = std::chrono::steady_clock::now();
-	std::cerr << "vertices generados: " << n2 << " aristas generadas: " << m2 << std::endl;
-
+	TransformarGrafoLineal(m2, n2, precios, mOriginal, nOriginal);
+	
 	auto resultado = ciudades(nOriginal, n2, m2, gVecinos, matriz);
 	auto end = std::chrono::steady_clock::now();
 
 	double time = std::chrono::duration<double, std::milli>(end - start).count();
 
-	std::cerr << algo << ' ' << time << std::endl;
+	std::cerr << algo << ' ' << nOriginal << ' ' << mOriginal << ' ' << time << std::endl;
 
 	if(resultado.size() >= 1)
 		for(int i= 0; i < resultado.size(); i++)
