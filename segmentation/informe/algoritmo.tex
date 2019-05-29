@@ -1,5 +1,8 @@
 \subsection{El algoritmo (y sus partes)}
 
+En esta sección mostraremos el pseudocódigo correspondiente a este trabajo en
+conjunto con información sobre detalles implementativos.
+
 Los algoritmos acá mostrados usan todos alguna implementación de la estructura
 \textsc{Disjoint-Set} que posee los siguientes observadores y operaciones:
 
@@ -11,36 +14,158 @@ Los algoritmos acá mostrados usan todos alguna implementación de la estructura
 	\item \Call{Unir}{ds, $a$, $b$}
 		--- Une al componente que contiene a $a$ con el componente que
 		contiene a $b$.
-	\item \Call{Tamaño}{ds $e$}
+	\item \Call{Tamaño}{ds, $e$}
 		--- Retorna el tamaño (en cantidad de elementos) de la
 		componente que contiene a $e$.
 \end{itemize}
 
 \subsubsection{Desenfoque}
 
-Tengo que escribir esto, la idea son sólo dos pasos: Armo la máscara y hago las
-dos convoluciones.
+La implementación del desenfoque depende se realiza generando el \emph{kernel}
+con el $\sigma$ apropiado. Y aprovecharnos de la \emph{separabilidad} del
+filtro para hacer una convolución en cada eje en lugar de tener que usar la
+matriz completa. Por otro lado elegimos limitar la cantidad de términos de la
+máscara a los que naturales desde $0$ hasta $\lceil 4 \sigma \rceil$ cuando
+necesitamos valores negativos de la normal los reflejamos en el \emph{kernel}
+calculado. El tope que escojemos hace que los coeficientes fuera del
+\emph{kernel} sean menores a $e^{-8}$ que son suficentemente pequeños cómo para
+no resultarnos relevantes.
+
+\begin{algorithm}[H]
+\caption{Algoritmo para realizar un desenfoque gaussiano}
+\begin{algorithmic}[1]
+\Statex{}
+\Function{Desenfocar}{$w$, $h$, imagen, $\sigma$}`
+	\Statex{} \Comment{} Por simpleza no están los chequeos de límites en la imagen
+	\State{} $\text{kernel} \is []$
+	\For{$i \is 0$ to $\lceil 4 \sigma \rceil + 1$}
+	\Comment{Coefficientes de la normal a usar}
+		\State{} $\text{kernel}[i]
+			\is \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{i^2}{2\sigma^2}}$
+	\EndFor{}
+	\For{$y \is 0$ to $h$}
+		\Comment{} Convolución horizontal
+		\For{$x \is 0$ to $w$}
+			\State{} $\text{sum} \is 0$
+			\For{$i \is 0$ to $|\text{kernel}|$}
+				\State{} $\text{sum} \is \text{sum}
+					+ \text{kernel}[i] \times (
+						\text{imagen}[y][x - 1]
+						+ \text{imagen}[y][x + 1]
+					)$
+			\EndFor{}
+			\State{} $\text{imagen}[y][x] \is \text{sum}$
+		\EndFor{}
+	\EndFor{}
+	\For{$y \is 0$ to $h$}
+		\Comment{} Convolución vertical
+		\For{$x \is 0$ to $w$}
+			\State{} $\text{sum} \is 0$
+			\For{$i \is 0$ to $|\text{kernel}|$}
+				\State{} $\text{sum} \is \text{sum}
+					+ \text{kernel}[i] \times (
+						\text{imagen}[y - 1][x]
+						+ \text{imagen}[y + 1][x]
+					)$
+			\EndFor{}
+			\State{} $\text{imagen}[y][x] \is \text{sum}$
+		\EndFor{}
+	\EndFor{}
+\EndFunction{}
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Construcción del grafo}
 
-Tengo que escribir esto, recorro pixel por pixel y agrego los ejes importantes.
-No necesito guardar los vértices del grafo porque cómo es conexo están
-implícitos en la lista de aristas.
+Para construir el grafo utilizamos la 8-vecindad cómo ya dijimos anteriormente.
+Una vez cargada la imagen podemos recorrer todos los píxeles (que serán
+vértices de nuestro grafo) y agregar los ejes necesarios.
+
+\begin{algorithm}[H]
+\caption{Algoritmo para construir el grafo a segmentar}
+\begin{algorithmic}[1]
+\Statex{}
+\Function{Construir-Grafo}{$w$, $h$, imagen}
+	\Statex{} \Comment{} Describimos a los ejes como \{desde, hasta, peso\}
+	\State{} $\text{ejes} \is \emptyset$
+	\For{$y \is 0$ to $h$}
+		\For{$x \is 0$ to $w$}
+			\State{} $p_o \is \{x, y\}$
+			\State{} $p_e \is \{x + 1, y\}$
+			\If{$p_e$ está en los límites de la imagen}
+				\State{} $\text{dif}
+					\is \Call{Diferencia}{p_o,\ p_e,\ \text{imagen}}$
+				\State{} \Call{Agregar}{ejes, \{$p_o$, $p_e$, dif\}}
+			\EndIf{}
+			\State{} $p_{sw} \is \{x - 1, y + 1\}$
+			\If{$p_{sw}$ está en los límites de la imagen}
+				\State{} $\text{dif}
+					\is \Call{Diferencia}{p_o,\ p_{sw},\ \text{imagen}}$
+				\State{} \Call{Agregar}{ejes, \{$p_o$, $p_{sw}$, dif\}}
+			\EndIf{}
+			\State{} $p_s \is \{x, y + 1\}$
+			\If{$p_s$ está en los límites de la imagen}
+				\State{} $\text{dif}
+					\is \Call{Diferencia}{p_o,\ p_s,\ \text{imagen}}$
+				\State{} \Call{Agregar}{ejes, \{$p_o$, $p_s$, dif\}}
+			\EndIf{}
+			\State{} $p_{se} \is \{x + 1, y + 1\}$
+			\If{$p_{se}$ está en los límites de la imagen}
+				\State{} $\text{dif}
+					\is \Call{Diferencia}{p_o,\ p_{se},\ \text{imagen}}$
+				\State{} \Call{Agregar}{ejes, \{$p_o$, $p_{se}$, dif\}}
+			\EndIf{}
+		\EndFor{}
+	\EndFor{}
+	\State{} \Return{} ejes
+\EndFunction{}
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Segmentación}
 
-El código importante. Recorro las aristas en orden y voy uniendo si vale la
-pena.
+Con los ejes ya ordenados el proceso de segmentar la imagen es muy simple.
+$\tau(C)$ es la función que dado un identificador de componente indica el
+factor de juego que le corresponde a esa componente.
+
+\begin{algorithm}[H]
+\caption{Algoritmo segmentar el grafo generado}
+\begin{algorithmic}[1]
+\Statex{}
+\Function{Segmentar}{$w$, $h$, ejes}
+	\State{} $\text{ds} \is \Call{Nuevo}{w \times h}$
+	\State{} $\text{umbral} \is [\tau(0), \tau(1), \dots, \tau(w \times h - 1)]$
+	\For{$\text{eje} \in \text{grafo}$ (de menor a mayor peso)}
+		\State{} $C_a \is \Call{Buscar}{\text{ds},\ \text{eje}.\text{desde}}$
+		\State{} $C_b \is \Call{Buscar}{\text{ds}\, \text{eje}.\text{hasta}}$
+		\If{$\text{eje}.\text{peso} \leq \text{umbral}[C_a]
+			\land \text{eje}.\text{peso} \leq \text{umbral}[C_b]$}
+			\State{} \Call{Unir}{ds, $C_a$, $C_b$}
+			\State{} $C_a \is \Call{Buscar}{\text{ds},\ C_a}$
+			\State{} $\text{umbral}[C_a] \is \Call{Tamaño}{\text{ds},\ C_a}
+				+ \tau(C_a)$
+		\EndIf{}
+	\EndFor{}
+	\State{} \Return{} ds
+\EndFunction{}
+\end{algorithmic}
+\end{algorithm}
 
 \subsubsection{Simplificación Greedy}
 
-\begin{algorithm}[h]
+Una vez segmentada la imagen se puede realizar un paso final que elimine las
+componentes más pequeñas. El recorrer las aristas de menor a mayor peso hace
+que las componentes que se unifiquen siempre lo hagan por la arista más liviana
+de su frontera (que es lógico suponer pertenece a la componente limítrofe más
+parecida).
+
+\begin{algorithm}[H]
 \caption{Algoritmo para eliminar segmentos pequeños}
 \begin{algorithmic}[1]
 \Statex{}
-\Function{Simplificar}{$w$, $h$, ds, grafo, $g$}
+\Function{Simplificar}{$w$, $h$, ds, ejes, $g$}
 	\State{} $\text{min} \is \frac{g}{w \times h}$
-	\For{$\text{eje} \in \text{grafo}$}
+	\For{$\text{eje} \in \text{ejes}$ (de menor a mayor peso)}
 		\If{$\Call{Tamaño}{\text{ds, eje}_a} < \text{min}
 		     \vee \Call{Tamaño}{\text{ds, eje}_b} < \text{min}$}
 			\State{} $C_a \is \Call{Buscar}{\text{ds, eje}_a}$
@@ -54,8 +179,22 @@ pena.
 \end{algorithmic}
 \end{algorithm}
 
-\subsubsection{Combinación}
+\subsubsection{Vista aérea del algoritmo}
 
-Tengo que poner un título mejor, la idea es acá hacer que sean todas llamdaas a
-lo que describrí arriba y que sea una vista por arriba de los pasos del
-algoritmo.
+A modo de unificar todos los pasos ya expuestos en detalle podemos resumir la
+operación del algoritmo en pocas líneas:
+
+\begin{algorithm}[H]
+\caption{Algoritmo para segmentar con todos los pasos comentados}
+\begin{algorithmic}[1]
+\Statex{}
+\Function{Simplificar}{$w$, $h$, imagen, $\sigma$, $k$, $g$}
+	\State{} \Call{Desenfocar}{$w$, $h$, imagen, $\sigma$}
+	\State{} $\text{ejes} \is \Call{Construir-Grafo}{w,\ h,\ \text{imagen}}$
+	\State{} \Call{Ordenar}{ejes}
+	\State{} $\text{segmentación} \is \Call{Segmentar}{w,\ w,\ \text{ejes}}$
+	\State{} \Call{Simplificar}{$w$, $h$, segmentación, ejes, $g$}
+	\State{} \Return{} segmentacion
+\EndFunction{}
+\end{algorithmic}
+\end{algorithm}
