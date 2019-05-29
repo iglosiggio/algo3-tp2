@@ -64,7 +64,7 @@ void blur(int ancho, int alto, float* imagen, float sigma) {
 	/* Hago la convolución en el eje X */
 	for (int y = 0; y < alto; y++)
 		for (int x = 0; x < ancho; x++) {
-			float sum = PIX(imagen, x, y);
+			float sum = mask[0] * PIX(imagen, x, y);
 
 			for (int i = 1; i < width; i++)
 				sum += mask[i] * (
