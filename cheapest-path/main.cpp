@@ -123,9 +123,9 @@ int main(int argc, char** argv) {
 
 	TransformarGrafoLineal(m2, n2, precios, mOriginal, nOriginal);
 
+	auto start = std::chrono::steady_clock::now();
 	std::cerr << "vertices generados: " << n2 << " aristas generadas: " << m2 << std::endl;
 
-	auto start = std::chrono::steady_clock::now();
 	auto resultado = ciudades(nOriginal, n2, m2, gVecinos, matriz);
 	auto end = std::chrono::steady_clock::now();
 
