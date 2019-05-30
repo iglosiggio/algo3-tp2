@@ -24,9 +24,64 @@ presente un rendimiento levemente superior para valores de $k$ y $g$ muy bajos
 
 \subsubsection{Resultados variando $k$}
 
-TODO -- Medir tiempos sin el postprocesamiento de $g$
+En el primer experimento decidimos medir el tiempo que tardaba el paso de
+segmentación variando el $k$ de $0$ a $1200$ con incrementos de a $50$.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/variar-k}
+	\caption{Tiempo incurrido por el proceso de segmentar al variar el $k$}
+\end{figure}
+
+Cuándo $k$ es $0$ el gráfico muestra que la segmentación realiza poco trabajo,
+pero a partir de $50$ no muestra ninguna tendencia clara. Cómo la
+experimentación se realizó con la misma entrada siempre esto da indicios de que
+el coste de este trabajo no se ve influído más que por las características del
+grafo grilla que se construye.
 
 \subsubsection{Resultados variando $g$}
 
-TODO -- Medir tiempos con distintos $k$ variando el $g$. Usar $k = -1000$ hace
-que nucna se unan las regiones.
+Dado que la granularidad varía su trabajo de acuerdo al $k$ elegido decidimos
+tomar $k$ entre $0$ y $1200$ y variar el $g$ entre $1$ y $991$ en incrementos
+de $10$.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/variar-g-arreglo}
+	\caption{Tiempo incurrido por el proceso de simplificar al variar el $g$}
+\end{figure}
+
+Para $k=0$ vemos que cómo que el set resultante de la segmentación tenga
+muchísimos conjuntos pequeños logra que el tiempo que requiera la
+simplificación sea considerablemente mayor. También vemos que cada
+implementación llega a un mínimo dado un $g$ suficientemente alto dónde el
+costo de hacer las llamadas a \textsc{Tamaño} superan a las pocas llamadas a
+\textsc{Unir} resultantes de los chequeos.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/variar-g-arbol}
+	\caption{Tiempo incurrido por el proceso de simplificar al variar el $g$}
+\end{figure}
+
+Tomar el árbol como representación el caso de $k=0$ arroja resultados
+interesantes. Dado que no se comprime el árbol cuanto menos se unifiquen las
+componentes menor es el coste de \textsc{Tamaño} que internamente realiza una
+llamada a \textsc{Buscar}. Lamentablemente cómo no experimentamos con mayor
+finura en los valores de $k$ entre $1$ y $150$ no podemos decir nada sobre cuál
+sea la tendencia que toma el gráfico en ese rango, sí vemos una tendencia más
+clara para el resto de los valores que tenemos información.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/variar-g-arbol-compr}
+	\caption{Tiempo incurrido por el proceso de simplificar al variar el $g$}
+\end{figure}
+
+Finalmente, en la simplificación usando la representación de árbol con
+compresión volvemos a ver las tendencias de la representación de arreglo pero
+con tiempos la mitad de grandes. Dado que los costes teóricos deberían ser
+diferentes pero vemos tendencias muy similares esto nos da indicios de que
+nuestro experimento no supo elegir valores que evidencien esas
+diferencias\footnote{O que nuestras implementaciones tienen errores que hacen
+que no funcionen de la forma esperada.}
