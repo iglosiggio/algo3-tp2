@@ -9,7 +9,7 @@ seed_a="$3"
 
 
 
-for i in $(seq 1 25); do
+for i in $(seq 1 10); do
 	# Experimento A
 	script=$generar_b
 	seed=$seed_a
