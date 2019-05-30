@@ -1,5 +1,9 @@
 fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.500.100.png
 graficos_segmentacion=graficos/grilla.pdf
+experimentos_segmentacion=segmentation/experimentacion/variar-k.pdf \
+			  segmentation/experimentacion/variar-g-arreglo.pdf \
+			  segmentation/experimentacion/variar-g-arbol.pdf \
+			  segmentation/experimentacion/variar-g-arbol-compr.pdf
 tex_segmentacion=$(wildcard segmentation/informe/*.tex)
 
 graficos_cheapest=graficos/bidireccional.pdf graficos/direccional.pdf \
@@ -27,10 +31,14 @@ clean:
 	$(MAKE) -C cheapest-path clean
 
 informe.pdf: informe.tex $(graficos_cheapest) $(tex_segmentacion) \
-	$(graficos_segmentacion) $(fotos_segmentacion)
+	$(graficos_segmentacion) $(fotos_segmentacion) \
+	$(experimentos_segmentacion)
 	latexmk -pdf informe.tex
 
 graficos/%:
 	$(MAKE) -C graficos $*
+
+segmentation/experimentacion/%:
+	$(MAKE) -C segmentation/experimentacion $*
 
 .PHONY: all clean segmentation/% cheapest-path/% graficos/%
