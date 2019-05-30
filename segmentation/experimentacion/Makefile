@@ -48,6 +48,19 @@ variar-g: binarios-actualizados
 binarios-actualizados:
 	$(MAKE) -C ../ all
 
-.PHONY: binarios-actualizados variar-k variar-g all
+variar-k.pdf: variar-k.plot
+	./variar-k.plot
+
+variar-g-%.pdf: variar-g.done
+	@
+
+variar-g.done: variar-g.plot
+	./variar-g.plot
+	touch variar-g.done
+
+clean:
+	rm -f *.pdf *.done
+
+.PHONY: binarios-actualizados variar-k variar-g all clean
 .PRECIOUS: salidas/k.arreglo.txt salidas/k.arbol.txt salidas/k.arbol-compr.txt \
 	salidas/g.arreglo.txt salidas/g.arbol.txt salidas/g.arbol-compr.txt
