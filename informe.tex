@@ -143,13 +143,25 @@ Sin embargo en $V'$ los W estados que representan un nodo son todas las formas d
 
 Y agregar nuevos litros significa moverme entre los estados agregando para cada $C'_{i_k}$ el costo $p_i$ para ir al $C'_{i_{k+1}}$ es decir que agregar $l_k$ litros es $\sum_0^Y d'_{k,k+1}$ dado que $p_i$ = $d'_{k,k+1}$ es explicitamente $(l_k * p_i)$ para cualquier $l_k$ que mantenga el rango $W \in (0..61)$
 
-Dado que $\forall (C'_{A_i}, C'_{B_j}) \exists d_{A_i,B_j}$ si se cumple el item \textbf{(2)} estoy representando todas las formas posibles de llegar a destino con $x$ combustible cargado mi estado inicial $C_A$ es $C'_{A_0}$\footnote{Es condición del problema que arranco con el tanque vacio.}} y tengo todas las formas posibles de llegar a $C_{B}$ con (0..W) litros en el tanque, no perdi soluciones.
+Dado que $\forall (C'_{A_i}, C'_{B_j}) \exists d_{A_i,B_j}$ si se cumple el item \textbf{(2)} estoy representando todas las formas posibles de llegar a destino con $x$ combustible cargado mi estado inicial $C_A$ es $C'_{A_0}$\footnote{Es condición del problema que arranco con el tanque vacio.} y tengo todas las formas posibles de llegar a $C_{B}$ con (0..W) litros en el tanque, no perdi soluciones.
 
 Sin embargo tengo soluciones de más, en particular tengo W formas distintas de llegar a $C_B$, y solo me interesa una. Abordaremos este tema en detalle cuando definamos $g(R')$.
 
 El algoritmo sería el siguiente:
 
 \subsubsection{Camino minimo para $V'$}
+
+\subsubsection{Obtener los resultados del grafo $g(V)$}
+
+\subsubsection{Experimentación}
+
+\subsubsection{Experimentación densidad $n=(0..40)$,$m$ denso. Todos los algos}
+
+\subsubsection{Experimentación función de aristas $n = 30$, $m=(29..400)$. Todos los algos}
+
+\subsubsection{Experimentación con poca densidad $n=(10..100)$, $m$ poco denso. Dijkstra, pq-dijkstra, bellmanford}
+
+
 
 
 \end{document}
