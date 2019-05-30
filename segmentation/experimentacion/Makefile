@@ -54,7 +54,7 @@ variar-k.pdf: variar-k.plot
 variar-g-%.pdf: variar-g.done
 	@
 
-variar-g.done: variar-g.plot
+variar-g.done: variar-g.plot binarios-actualizados
 	./variar-g.plot
 	touch variar-g.done
 
