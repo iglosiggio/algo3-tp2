@@ -22,7 +22,7 @@ salidas/%.arreglo.$(K).$(G).data: entrada.txt
 variar-k: binarios-actualizados
 	rm -f salidas/k.arreglo.resultados salidas/k.arbol.resultados \
 		salidas/k.arbol-compr.resultados
-	for i in $$(seq 0 1200 50); do \
+	for i in $$(seq 0 50 1200); do \
 		$(MAKE) K=$$i G=-1 salidas/k.arreglo.$$i.-1.data \
 			salidas/k.arbol.$$i.-1.data \
 			salidas/k.arbol-compr.$$i.-1.data; \
@@ -34,8 +34,8 @@ variar-k: binarios-actualizados
 variar-g: binarios-actualizados
 	rm -f salidas/g.arreglo.resultados salidas/g.arbol.resultados \
 		salidas/g.arbol-compr.resultados
-	for i in $$(seq 0 1200 150); do \
-		for j in $$(seq 1 1000 10); do \
+	for i in $$(seq 0 150 1200); do \
+		for j in $$(seq 1 10 1000); do \
 			$(MAKE) K=$$i G=$$j salidas/g.arreglo.$$i.$$j.data \
 				salidas/g.arbol.$$i.$$j.data \
 				salidas/g.arbol-compr.$$i.$$j.data; \
