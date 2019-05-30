@@ -9,7 +9,7 @@ s_m=0
 s_tiempo=0.0
 cant=0
 
-for filename in $(ls ../data/expA.*.$algo.resultados ) ; do
+for filename in $(ls ../data/$exp.*.$algo.resultados ) ; do
 
     echo $filename
 
