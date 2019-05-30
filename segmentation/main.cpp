@@ -2,6 +2,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <cmath>
 
@@ -17,6 +18,11 @@
 #define PIX(foto, x, y) (foto)[VERT(x, y)]
 #define PIXDIFF(foto, x, y, dx, dy) DIFF(PIX(foto, x, y), \
 					 PIX(foto, (x) + (dx), (y) + (dy)))
+#define START_TIMER(name) auto name##_start = std::chrono::steady_clock::now()
+#define STOP_TIMER(name) auto name##_end = std::chrono::steady_clock::now()
+#define DURATION(name) (std::chrono::duration<double, std::milli>( \
+		name##_end - name##_start \
+	).count())
 
 /* Eje: {desde, hasta, peso} */
 struct Eje {
@@ -158,12 +164,20 @@ int main(int argc, char** argv) {
 	disjoint_set* ds = ds_new(ancho * alto, K);
 
 	/* Segmento */
+	START_TIMER(segmentation);
 	for (Eje& e : ejes)
 		if (misma_region(e, ds))
 			ds_union(ds, e.desde, e.hasta, e.peso, K);
+	STOP_TIMER(segmentation);
 
+	/* Limpio conjuntos muy chicos si es necesario */
+	START_TIMER(cleaning);
 	if (min_feature > 0)
 		limpiar_conjuntos(ceil(ancho * alto * min_feature), ejes, ds);
+	STOP_TIMER(cleaning);
+
+	std::cerr << DURATION(segmentation) << ' ' << DURATION(cleaning)
+		<< std::endl;
 
 	/* Escribo */
 	for (int i = 0; i < ancho * alto; i++) {
