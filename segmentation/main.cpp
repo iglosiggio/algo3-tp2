@@ -176,7 +176,8 @@ int main(int argc, char** argv) {
 		limpiar_conjuntos(ceil(ancho * alto * min_feature), ejes, ds);
 	STOP_TIMER(cleaning);
 
-	std::cerr << DURATION(segmentation) << ' ' << DURATION(cleaning)
+	std::cerr << K << ' ' << sigma << ' ' << min_feature
+		<< DURATION(segmentation) << ' ' << DURATION(cleaning)
 		<< std::endl;
 
 	/* Escribo */
