@@ -24,8 +24,7 @@ variar-k: binarios-actualizados
 	for i in $$(seq 0 1200 50); do \
 		$(MAKE) K=$$i G=-1 salidas/k.arreglo.txt salidas/k.arbol.txt \
 			salidas/k.arbol-compr.txt; \
-	done; \
-	touch variar-k.done
+	done \
 
 variar-g: binarios-actualizados
 	rm -f salidas/g.arreglo.txt salidas/g.arbol.txt salidas/g.arbol-compr.txt
@@ -34,8 +33,7 @@ variar-g: binarios-actualizados
 			$(MAKE) K=$$i G=$$j salidas/g.arreglo.txt \
 				salidas/g.arbol.txt salidas/g.arbol-compr.txt; \
 		done; \
-	done; \
-	touch variar-g.done
+	done \
 
 binarios-actualizados:
 	$(MAKE) -C ../ all
