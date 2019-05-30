@@ -1,0 +1,32 @@
+\subsection{Estructuras para implementar \textsc{Disjoint-Set}}
+
+Como parte del trabajo la cátedra requirió implementar el \textsc{Disjoint-Set}
+con 3 estructuras distintas:
+
+\begin{itemize}
+	\item Representado como arreglo de componentes
+	\item Representado como árbol
+	\item Representado como árbol con \emph{path compression}
+\end{itemize}
+
+En sumado a esto, las representaciones de árbol pueden elegir si unir por mayor
+rango o por mayor tamaño (en nuestro caso particular implementamos por mayor
+tamaño). Esta sección del informe analiza el rendimiento de las distintas
+representaciones variando los parámetros $k$ y $g$\footnote{Valores de $\sigma$
+mayores aumentarían el tiempo requerido de procesamiento pero ese procesamiento
+se realiza antes de cualquier llamada a las estructuras que son relevantes a
+esta sección del informe.}
+
+Dado que \textsc{Buscar} es considerablemente más simple en las
+implementaciones con arreglo de componententes creemos que es esperable que
+presente un rendimiento levemente superior para valores de $k$ y $g$ muy bajos
+(dónde se realizan muy pocas llamadas a \textsc{Unir}).
+
+\subsubsection{Resultados variando $k$}
+
+TODO -- Medir tiempos sin el postprocesamiento de $g$
+
+\subsubsection{Resultados variando $g$}
+
+TODO -- Medir tiempos con distintos $k$ variando el $g$. Usar $k = -1000$ hace
+que nucna se unan las regiones.
