@@ -146,9 +146,56 @@ Y agregar nuevos litros significa moverme entre los estados agregando para cada 
 
 Dado que $\forall (C'_{A_i}, C'_{B_j}) \exists d_{A_i,B_j}$ si se cumple el item \textbf{(2)} estoy representando todas las formas posibles de llegar a destino con $x$ combustible cargado mi estado inicial $C_A$ es $C'_{A_0}$\footnote{Es condición del problema que arranco con el tanque vacio.} y tengo todas las formas posibles de llegar a $C_{B}$ con (0..W) litros en el tanque, no perdi soluciones.
 
-Sin embargo tengo soluciones de más, en particular tengo W formas distintas de llegar a $C_B$, y solo me interesa una. Abordaremos este tema en detalle cuando definamos $g(R')$.
+Sin embargo tengo soluciones de más, en particular tengo W formas distintas de llegar a $C_B$, y solo me interesa una. Abordaremos este tema en detalle cuando definamos $g(R')$. El algoritmo sería el siguiente:
 
-El algoritmo sería el siguiente:
+
+
+\begin{algorithm}[H]
+	\caption{$f(V)$}
+	\begin{algorithmic}[1]
+		\item[\textbf{Inicialización:}]
+		\item[] \begin{itemize}
+			\item[] $V_n = $ cantidad de nodos en V.
+			\item[] $V_{aristas(i)} = $ tripla $(origen, destino, peso)$ de la i-esima arista.
+			\item[] $W = 61$
+		\end{itemize}
+		\item[\textbf{Funciones auxiliares:}]
+		\item[] \begin{itemize}
+			\item[] \Call{AgregarArista}{$C_a,C_b,peso$} agrega $d_{C_a,C_b}$ al grafo $V'$
+		\end{itemize}
+		\Statex
+		\Function{TransformarGrafo}{$V, n, m$}
+		\state $V'_n \is V_n * W$
+		\For{$(i \in (0..n))$}
+		\Comment Aristas de carga de combustible
+		\For{$(k \in (1..W))$}
+		\State $C_{i_k} \is i * W + k$
+		\State \Call{AgregarArista}{$C_{i_k} - 1,C_{i_k},peso$}
+		\EndFor
+		\EndFor
+		\State
+		
+		\For{$(i \in (0..m))$}
+		\State $C_a,C_b,d_{a,b} \is V_{aristas(i)}$
+		\Comment Aristas de transición de nodos
+		\For{$(k \in (1..W))$}
+		\If{$k \geq d_{a,b}$}
+		\Comment Agrego las aristas bidireccionalmente
+		\State \Call{AgregarArista}{$C_a + k,C_b + k - d{a,b},0$}
+		\State \Call{AgregarArista}{$C_b + k,C_a + k - d{a,b},0$}
+		\EndIf
+		\EndFor
+		\EndFor
+		
+		\State \Return $V'$
+		\EndFunction
+	\end{algorithmic}
+	\begin{description}
+		\item[\textbf{Complejidad algorítmica:}] $O(W \times (n + m))$
+	\end{description}
+\end{algorithm}
+
+Nota: Si bien es cierto que W es acotado, expreso la complejidad así para mostrar lo fuertemente dependiente que es del parámetro la transformación.
 
 \subsubsection{Camino minimo para $V'$}
 
