@@ -34,6 +34,7 @@ Si la distancias entre ciudades estan representadas en kilometros y el precio de
 	\item El precio de la nafta varia de ciudad en ciudad.
 	\item El auto posee un limite de litros de nafta que puede cargar (60 litros).
 	\item Se estima que cada litro de nafta alcanza para exactamente un kilometro de distancia.
+	\item El auto siempre empieza descargado (Con 0 litros de combustible).
 \end{enumerate}
 
 El problema formalmente será representado como un grafo donde cada ciudad $c_i$ es un vertice con su respectivo precio por litro $p_i$ y donde cada distancia $d_{x,y}$ que comunica un par de ciudades ($c_x, c_y$) son las $m$ aristas del grafo.
@@ -52,37 +53,35 @@ Las rutas son bidireccionales, sin embargo dadas 2 ciudades $C_a$ y $C_b$ no se 
 
 Eso significa que necesitariamos una representación direccional si quisieramos hablar de costes efectivos. $Fig1, Fig2$ ilustran esta diferencia para 2 ciudades.
 
-\begin{minipage}{0.45\textwidth}
-	\centering
+\begin{minipage}{0.5\textwidth}
 	\includegraphics[width=\linewidth]{{graficos/bidireccional}.pdf}
 	\captionof{figure}{bidireccional}
 \end{minipage}
-\begin{minipage}{0.42\textwidth}
-	\centering
+\begin{minipage}{0.5\textwidth}
 	\includegraphics[width=\linewidth]{{graficos/direccional}.pdf}
 	\captionof{figure}{direccional}
 \end{minipage}
-
 
 En particular $\forall(p_a \neq p_b) \rightarrow (p_a * d_{a,b} \neq p_b * d_{a,b}) $
 
 Además los caminos minimos no necesariamente son simples, por ejemplo dadas 3 ciudades $C_a$, $C_b$ y $C_c$ y 2 rutas con distancia $d_{a,b}$ y $d_{a,c}$.
 
+\begin{minipage}{0.5\textwidth}
+	Tengo que si $p_a > p_b$ podría tener que evaluar si moverme allí para cargar nafta y volver es menos costoso, que ir directamente.
+	
+	En fig3 se ilustra un grafo donde el costo de ir de $C_A$ a $C_C$ directamente es $p_a * d_{a,c} = 750$.
+	
+	Mientras que el camino pasando por $C_b$ es:
+	
+	$C_a$ a $C_b$ a $C_a$ a $C_C$ = 450.
+	
+	Sin embargo esto motiva a analizar si existen transformaciones del grafo en la que aplicar algoritmos de camino minimo es posible.
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+	\includegraphics[width=\linewidth]{{graficos/caminoNoSimple}.pdf}
+	\captionof{figure}{CaminoNoSimple}
+\end{minipage}
 
-\begin{figure}
-	\includegraphics[width=0.5\textwidth]{{graficos/caminoNoSimple}.pdf}
-	\caption{Camino no simple}
-\end{figure}
-
-Tengo que si $p_a > p_b$ podría tener que evaluar si moverme allí para cargar nafta y volver es menos costoso, que ir directamente.
-
-En fig3 se ilustra un grafo donde el costo de ir de $C_A$ a $C_C$ directamente es $p_a * d_{a,c} = 750$.
-
-Mientras que el camino pasando por $C_b$ es:
-
-$C_a$ a $C_b$ a $C_a$ a $C_C$ = 450.
-
-Sin embargo esto motiva a analizar si existen transformaciones del grafo en la que aplicar algoritmos de camino minimo es posible.
 
 \subsubsection{Pautas de diseño}
 
@@ -92,19 +91,21 @@ Someteremos nuestro grafo a diferentes experimentos buscando comparar entre dife
 
 Finalmente Dijkstra, bellman-ford son algoritmos $1$ a $N$ (nodos), cuando nos refiramos a ellos como algoritmos $N$ a $N$, nos referimos justamente a ejecutarlos $N$ veces (Abordaremos este tema en detalle en secciones posteriores).
 
-\subsubsection{Transformación del grafo}
+\subsubsection{En búsqueda de un algoritmo}
 
-Lo que queremos es dado un grafo $V$, obtener todos sus costos efectivos minimos $R$ para cada $(C_i, C_j)$. Buscamos para resolver el problema 2 funciones. La primera una funciòn $f(V) = V'$ que convierta nuestro grafo en función del costo efectivo a un nuevo grafo en el cual si se puedan aplicar algoritmos de camino minimo. Luego buscamos una función $g(R') = R$ que sepa interpretar los resultados del nuevo grafo como solución del original y obtener los resultados de $V$ que nos interesan.
+Buscamos dado un grafo $V$, obtener todos sus costos efectivos minimos $R$ para cada $(C_i, C_j)$ y ádemas queremos realizar dicha tarea empleando algoritmos de camino minimo, para esto se plantearán 2 funciones. La primera una funciòn $f(V) = V'$ que convierta nuestro grafo en función del costo efectivo a un nuevo grafo en el cual si se puedan aplicar algoritmos de camino minimo. Luego buscamos una función $g(R') = R$ que sepa interpretar los resultados del nuevo grafo como solución del original y obtener los resultados de $V$ que nos interesan.
 
-Dadas ambas funciones los pasos que aplicaremos sobre un grafo V para obtener los resultados R que nos interesan son los siguientes:
+Dadas ambas funciones el algoritmo que aplicaremos sobre V para obtener los resultados R consta de los siguientes pasos:
 
 \begin{enumerate}
 	\item $V' \is f(V)$
-	\item $R' \is$ Algún algoritmo valido de camino minimo N a N.
+	\item $R' \is$ Aplicar un algoritmo de camino minimo a $V'$
 	\item $R \is g(R')$
 \end{enumerate}
 
-Ahora bien partamos de la primera incognita, como generar una funciòn $f(V)$.
+Hablaremos en detalle de los pasos (1) y (3), mientras que en el paso (2) solo haremos aclaraciones.
+
+\subsubsection{Transformación del grafo $f(V)$}
 
 Para lograr esta tarea, necesitamos eliminar la noción del precio ya que los algoritmos de camino minimo solo saben operar en funciòn del peso de las aristas. Además paso las aristas resultantes que debemos obtener serìa conveniente que esten en función del costo efectivo.
 
@@ -120,16 +121,35 @@ $V$ posee  N nodos.
 
 $V'$ posee N * 61 tal que si $C_i$ es nodo en V $\rightarrow$ $\exists$ $\sum_{k=0}^{W} C'_{i * k}$ nodos en $V'$
 
-por notación llamaremos $C'_{i_0}$ a $C'_{i_{60}}$ a nuestros vertices en $V'$, ahora bien necesitamos redefinir nuestras aristas en función del costo efectivo.
+por notación llamaremos $C'_{i_0}$ a $C'_{i_{60}}$ a nuestros vertices en $V'$ ahora bien necesitamos redefinir nuestras aristas en función del costo efectivo. Tendremos 2 tipos de aristas.
 
-Dado que nuestra transformación tiene $W$ estados que representan un mismo nodo necesitaremos aristas para movernos entre dichos estados, si razonamos que para ir $C'_{i_0}$ a $C'_{i_1}$ es exactamente agregar un litro de nafta es trivial asumir que en general tendremos que dado un estado $C'_{i_k}$ el costo para ir a $C'_{i_{k+1}}$ será exactamente $p_i$.
+\begin{itemize}
+	\item (1) que representa una arista de carga de combustible y comunica los $W$ estados de un nodo. Es razonable considerar que si yo estoy en una ciudad con k litros y quiero agregar un litro de nafta el costo será el precio de cargar nafta en dicha ciudad. Es trivial asumir que en general tendremos que dado un estado $C'_{i_k}$ el costo para ir a $C'_{i_{k+1}}$ será exactamente $p_i$ para toda $d_{k,k+1}$.
+\end{itemize}
 
-Es decir de momento nuestra transformaciòn tiene  $N * (W - 1$) aristas para movernos entre los estados $C'_{i_k}$
+Es decir de nuestra transformaciòn tiene  $N * (W - 1$) aristas para movernos entre los estados $C'_{i_k}$
 
-Lo siguiente que haremos serà redefinir como son las conexiones entre los nodos, por cada $d_{i,j} \in m$ de $V$
+\begin{itemize}
+	\item (2) que representa una arista de movimiento entre nodos $(C_A, C_B)$, en general por cada $d_{C_A,C_B} \in m$ de $V$ diremos que en $V'$ esto solo sucederá si se cumple que $C'_{A_k}$ $\exists$ $d'_{A_k,B_j}$ $\leftrightarrow$  $k - d_{A,B} = j$. Es decir ir de $C_A$ a $C_B$ solo es posible si la cantidad de litros con la que voy a llegar a B es la cantidad de litros que tenía en A menos la distancia. Y el costo de esta arista en particular es $0$ debido a que para que sea posible ya cargue combustible en A, lo que significa que ya pague el precio.
+\end{itemize}
 
+Con estas condiciones generamos $V'$, pero necesitamos comprobar si esta transformación es válida. Para ello nos alcanza con demostrar que los resultados $R$ de $V$ existen en $V'$ en particular nos alcanza con decir que $(R \subset R')$. Si esto sucede entonces $\exists$ $g(R')$ que transforma a $R$. No necesariamente trivial.
 
-TODO: Terminar transformación, armar dem de correctitud y experimentación.
+Imaginemos que existe costo efectivo minimo en $V$  $\exists costo_{min} \in (C_A,C_B)$ tal que no existe en $V'$.
+
+De ser así existe una combinación de formas de cargar combustible en distintas $C_i$ tal que $\sum (p_i * l_i)$ no existe en $R'$ entonces existe alguna (o varias) formas de cargar combustible en una ciudad $(p_i * l_k)$ que no esta en $V'$
+
+Sin embargo en $V'$ los W estados que representan un nodo son todas las formas de estar en una ciudad con $l_x$ litros previamente cargados.
+
+Y agregar nuevos litros significa moverme entre los estados agregando para cada $C'_{i_k}$ el costo $p_i$ para ir al $C'_{i_{k+1}}$ es decir que agregar $l_k$ litros es $\sum_0^Y d'_{k,k+1}$ dado que $p_i$ = $d'_{k,k+1}$ es explicitamente $(l_k * p_i)$ para cualquier $l_k$ que mantenga el rango $W \in (0..61)$
+
+Dado que $\forall (C'_{A_i}, C'_{B_j}) \exists d_{A_i,B_j}$ si se cumple el item \textbf{(2)} estoy representando todas las formas posibles de llegar a destino con $x$ combustible cargado mi estado inicial $C_A$ es $C'_{A_0}$\footnote{Es condición del problema que arranco con el tanque vacio.}} y tengo todas las formas posibles de llegar a $C_{B}$ con (0..W) litros en el tanque, no perdi soluciones.
+
+Sin embargo tengo soluciones de más, en particular tengo W formas distintas de llegar a $C_B$, y solo me interesa una. Abordaremos este tema en detalle cuando definamos $g(R')$.
+
+El algoritmo sería el siguiente:
+
+\subsubsection{Camino minimo para $V'$}
 
 
 \end{document}
