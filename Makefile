@@ -1,4 +1,4 @@
-fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.600.100.png
+fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.500.100.png
 graficos_segmentacion=graficos/grilla.pdf
 tex_segmentacion=$(wildcard segmentation/informe/*.tex)
 
