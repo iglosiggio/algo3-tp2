@@ -24,10 +24,14 @@ experimentos_segmentacion=segmentation/experimentacion/variar-k.pdf \
 tex_segmentacion=$(wildcard segmentation/informe/*.tex)
 
 graficos_cheapest=graficos/bidireccional.pdf graficos/direccional.pdf \
-		  graficos/caminoNoSimple.pdf
+		  graficos/caminoNoSimple.pdf \
+		  graficos/bellman_ford_correlacion.pdf \
+		  graficos/dijkstra_correlacion.pdf \
+		  graficos/expA_algos_todos.pdf graficos/expB_algos_todos.pdf \
+		  graficos/floyd_warshall_correlacion.pdf \
+		  graficos/pq_dijkstra_correlacion.pdf
 
 all: informe.pdf
-
 
 segmentation/salidas/%.png:
 	$(MAKE) -C segmentation \
