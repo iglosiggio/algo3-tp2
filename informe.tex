@@ -202,11 +202,23 @@ Sin embargo tengo soluciones de más, en particular tengo W formas distintas de 
 
 A fines prácticos el algoritmo generá un ordenamiento en el cual los primeros $(0..60)$ nodos representan el nodo $0$ de $V$, los siguentes $(0..60)$ nodos al nodo $1$ de $V$ y así sucesivamente. El ordenamiento fue una desición de implementación. Sin embargo cualquier ordenamiento válido puede ser correcto, no necesariamente el aqui propuesto.
 
-\subsubsection{Camino minimo para $V'$}
+\subsubsection{como obtener los resultados de $V$ con $g(R')$}
+
+Ahora podemos ejecutar algoritmos de camino minimo sobre $V'$ para obtener sus resultados. No nos interesa los detalles sobre como es la estructura de $R$ y $R'$, ya que los resultados son las distancias minimas entre 2 ciudades diremos que son una lista de tuplas $(origen, destino, costo)$
+
+Lo importante es que el peso representa costos, de ir de un vertice a otro, y el minimo camino en $V'$ representa el costo minimo de ir de $C'_x$ a un $C'_y$ sea cual sea el nodo y tenemos soluciones de más ya que tenemos W nodos que representan a una sola ciudad.
 
 Sabemos que dado una ciudad de origen, su destino, esta representado por W nodos. Una idea intuitiva para pensar esto sería decir que dado un destino $C_b$ el costo minimo existe en alguno de sus $(C'_{b_0}...C'_{b_{60}})$ nodos. Entonces se puede calcular cual es el costo minimo a todos los estados posibles y nos quedamos solo con el minimo.
 
-Sin embargo este calculo no es necesario, si definamos que significa un nodo en $V'$ sería estar en una ciudad $C_x$ con una cierta cantidad de litros. Ahora tomemos un nodo $C'_ {x_k}$ cualquiera con $k \neq 0$. El costo minimo de llegar ahí es TODO
+Sin embargo este calculo no es necesario, si definamos que significa un nodo en $V'$ sería estar en una ciudad $C_x$ con una cierta cantidad de litros. Ahora tomemos un nodo $C'_ {x_k}$ cualquiera con $(k \neq 0)$ Su distancia es minima debido a que se emplea un algoritmo de camino minimo y sobra $k$ de combustible.
+
+la idea intuitiva que podemos asumir es que si tengo $k$ litros de sobra en mi tanque al llegar al destino, entonces existe un camino en el cual llego al destino sin pagar ese sobrante. Ese camino es justamente el camino minimo que va al destino con $k = 0$.   
+
+Si consideramos el problema, solo nos interesa llegar al destino, no nos interesa llegar con un $k \neq 0$ cargado en el auto, ya que ese sobrante tiene un costo.
+
+Entonces para obtener solo las distancias de $V'$ que representan a un costo minimo en el problema original solo nos interesan aquellos nodos de origen y destino que sean de la forma 
+$C_{x_0}$ a $C_{y_0}$ con costo minimo.
+
 
 \subsubsection{Sobre los algoritmos de camino minimo}
 
@@ -252,7 +264,7 @@ Además hay ciertos parámetros que serán inmutables durante la experimentació
 
 Dicho anteriormente Floyd-Warshall debería ser menos eficiente en la práctica, sin embargo necesitamos validarlo, como experimentación consideramos que una buena idea tomar grafos pequeños en $n$ y completos. En esta situación floyd warshall cuya complejidad es $O(n^3)$ no debería mostrar un comportamiento tan diferente contra algoritmos que dependan de $m$.
 
-
+\vspace{5mm}
 \begin{center}
 	$n \in [3; 12]; m=\frac{n*(n - 1)}{2}$
 \end{center}
@@ -260,12 +272,12 @@ Dicho anteriormente Floyd-Warshall debería ser menos eficiente en la práctica,
 \includegraphics[width=\linewidth]{{graficos/expB_algos_todos}.pdf}
 \captionof{figure}{Comparación de los algoritmos}
 
-\vspace{3mm}
+\vspace{5mm}
 Como podemos notar floyd warshall tarda un tiempo considerablemente mayor a los otros algoritmos, Algo que podríamos pensar es que por ahí los algoritmos viven en complejidades diferentes, sin embargo podemos representarlo en un gráfico de correlación para comprobarlo.
 
-Se supone que por ser completo $O(m)=O(n^2)$ podemos chequear que en todos los casos ya que $n$ es completo el fit es decente
+Se supone que por ser completo $O(m)=O(n^2)$ podemos chequear que en todos los casos ya que $n$ es completo el fit sea decente para $n^3$
 
-
+\begin{center}
 \includegraphics[width=\linewidth]{{graficos/bellman_ford_correlacion}.pdf}
 \captionof{figure}{Bellman Ford}
 \includegraphics[width=\linewidth]{{graficos/dijkstra_correlacion}.pdf}
@@ -274,14 +286,43 @@ Se supone que por ser completo $O(m)=O(n^2)$ podemos chequear que en todos los c
 \captionof{figure}{Dijkstra con prioridad}
 \includegraphics[width=\linewidth]{{graficos/floyd_warshall_correlacion}.pdf}
 \captionof{figure}{Floyd Warshall}
+\end{center}
+
+\vspace{5mm}
+
+El primer experimento resultó muy pequeño para mostrar el comportamiento de los algoritmos de Dijkstra, Bellman Ford y Dijkstra con prioridad.
+
+Decidimos realizar un nuevo experimento para ver sus comportamientos cuando $v$ es poco denso, para esto decidimos tomar $n$ mucho más grande.
+\vspace{5mm}
+\begin{center}
+	$n \in [10; 100]; m=(n*3)$
+\end{center}
+
+\includegraphics[width=\linewidth]{{graficos/expA_algos_todos}.pdf}
+\captionof{figure}{Comparación de algoritmos (Excluido Floyd Warshall)}
+
+\vspace{5mm}
+
+Nota: En este último experimento, Dijkstra al llegar a $n = 60$ se excedió del tiempo límite marcado. 
+
+Finalmente como podemos observar Dijkstra con prioridad y Bellman Ford muestra una velocidad superior al resto.
+
+\subsubsection{Trabajo Futuro}
+
+En un principio teniamos planteadas un scope mucho más grande con el proyecto, sin embargo por limitaciones del tiempo no hemos podido cubrir todo lo que en un principio nos propusimos. Esta es solo una lista de cosas que consideramos nos faltaron.
+
+\begin{enumerate}
+	\item En el problema de camino minimo en un principio habíamos realizado otra transformación del grafo diferente a la propuesta en este informe. Dicha transformación era más densa. Sin embargo habría estado bueno realizar una experimentación con ambas transformaciones y analizar si Bellman Ford o Dijkstra con prioridad realizaban una elección de aristas mejor que les permita tener mejor rendimiento.
+	
+	\item Nos hubierá gustado definir una experimentación constante en $n$ suficientemente grande que varia en las aristas, para así revisar fijado un $n$ como los algoritmos manejan la densidad.
+	
+	\item En el primer experimento, $n \in [3; 12]$ nos hubierá gustado tomar un $n$ más grande sin embargo lo elegimos así por su practicidad para realizar una experimentación rapida.
+\end{enumerate}
 
 
 
-\subsubsection{Experimentación densidad $n=(0..40)$,$m$ denso. Todos los algos}
 
-\subsubsection{Experimentación función de aristas $n = 30$, $m=(29..400)$. Todos los algos}
 
-\subsubsection{Experimentación con poca densidad $n=(10..100)$, $m$ poco denso. Dijkstra, pq-dijkstra, bellmanford}
 
 
 
