@@ -206,8 +206,6 @@ A fines prácticos el algoritmo generá un ordenamiento en el cual los primeros 
 
 Ahora podemos ejecutar algoritmos de camino minimo sobre $V'$ para obtener sus resultados. No nos interesa los detalles sobre como es la estructura de $R$ y $R'$, ya que los resultados son las distancias minimas entre 2 ciudades diremos que son una lista de tuplas $(origen, destino, costo)$
 
-Lo importante es que el peso representa costos, de ir de un vertice a otro, y el minimo camino en $V'$ representa el costo minimo de ir de $C'_x$ a un $C'_y$ sea cual sea el nodo y tenemos soluciones de más ya que tenemos W nodos que representan a una sola ciudad.
-
 Sabemos que dado una ciudad de origen, su destino, esta representado por W nodos. Una idea intuitiva para pensar esto sería decir que dado un destino $C_b$ el costo minimo existe en alguno de sus $(C'_{b_0}...C'_{b_{60}})$ nodos. Entonces se puede calcular cual es el costo minimo a todos los estados posibles y nos quedamos solo con el minimo.
 
 Sin embargo este calculo no es necesario, si definamos que significa un nodo en $V'$ sería estar en una ciudad $C_x$ con una cierta cantidad de litros. Ahora tomemos un nodo $C'_ {x_k}$ cualquiera con $(k \neq 0)$ Su distancia es minima debido a que se emplea un algoritmo de camino minimo y sobra $k$ de combustible.
@@ -236,9 +234,7 @@ Analizemos primero Floyd Warshall, por ser un algoritmo $n$ a $n$ este calcula t
 
 Sin embargo en la práctica calculara $(C'_0..C'_W)$ origenes cuando lo que necesitamos es solo el $C'_0$ especificado en la sección anterior lo que podría implicar costes mayores (Ver experimentación para más detalles).
 
-En el caso de los algoritmos $1$ a $n$ necesitamos transformarlos en algoritmos $n$ a $n$. Sin embargo tenemos espacio para optimizar, dado que solo nos interesan los caminos minimos que parten de un origen que implicitamente representa tener el tanque vacio. Podemos aprovechar y correrlo solo para los nodos que representen esa condición.
-
-Si mantenemos el ordenamiento propuesto en $f(V)$ nos interesan los nodos en las posiciones $(0,61..n*61)$ solo necesitaríamos ejecutar el algoritmo de camino minimo en dichas posiciones y obtener sus distancias verdaderas a las demás ciudades, dicho anteriormente son también posiciones que representan estar en una ciudad con 0 litros. 
+En el caso de los algoritmos $1$ a $n$ necesitamos transformarlos en algoritmos $n$ a $n$. Sin embargo tenemos espacio para optimizar, dado que solo nos interesan los caminos minimos que parten de un origen que implicitamente representa tener el tanque vacio. Podemos aprovechar y correrlo solo para los nodos que representen esa condición. Es decir todos los $C'{x_0}$ origenes y $C'{y_0}$ destinos
 
 Realizada esta tarea los algoritmos de camino minimo $1$ a $n$ nodos, pasan a tener un grado más en su complejidad y ser algoritmos $n$ a $n$.
 
@@ -262,9 +258,8 @@ Además hay ciertos parámetros que serán inmutables durante la experimentació
 \end{itemize}
 
 
-Dicho anteriormente Floyd-Warshall debería ser menos eficiente en la práctica, sin embargo necesitamos validarlo, como experimentación consideramos que una buena idea tomar grafos pequeños en $n$ y completos. En esta situación floyd warshall cuya complejidad es $O(n^3)$ no debería mostrar un comportamiento tan diferente contra algoritmos que dependan de $m$.
+Dicho anteriormente necesitamos comprobar si Floyd-Warshall es menos eficiente en la práctica. Una buena idea tomar grafos pequeños en $n$ y completos. En esta situación floyd warshall cuya complejidad es $O(n^3)$ no debería mostrar un comportamiento tan diferente contra algoritmos que dependan de $m$.
 
-\vspace{5mm}
 \begin{center}
 	$n \in [3; 12]; m=\frac{n*(n - 1)}{2}$
 \end{center}
@@ -273,7 +268,7 @@ Dicho anteriormente Floyd-Warshall debería ser menos eficiente en la práctica,
 \captionof{figure}{Comparación de los algoritmos}
 
 \vspace{5mm}
-Como podemos notar floyd warshall tarda un tiempo considerablemente mayor a los otros algoritmos, Algo que podríamos pensar es que por ahí los algoritmos viven en complejidades diferentes, sin embargo podemos representarlo en un gráfico de correlación para comprobarlo.
+Notar que floyd warshall tarda un tiempo considerablemente mayor. Algo que podríamos pensar es que los algoritmos viven en complejidades diferentes, y representarlos en un gráfico de correlación para comprobarlo.
 
 Se supone que por ser completo $O(m)=O(n^2)$ podemos chequear que en todos los casos ya que $n$ es completo el fit sea decente para $n^3$
 
@@ -288,7 +283,7 @@ Se supone que por ser completo $O(m)=O(n^2)$ podemos chequear que en todos los c
 \captionof{figure}{Floyd Warshall}
 \end{center}
 
-\vspace{5mm}
+\newpage
 
 El primer experimento resultó muy pequeño para mostrar el comportamiento de los algoritmos de Dijkstra, Bellman Ford y Dijkstra con prioridad.
 
@@ -307,7 +302,9 @@ Nota: En este último experimento, Dijkstra al llegar a $n = 60$ se excedió del
 
 Finalmente como podemos observar Dijkstra con prioridad y Bellman Ford muestra una velocidad superior al resto.
 
-\subsubsection{Trabajo Futuro}
+\newpage
+
+\subsubsection{Trabajo Futuro de esta sección}
 
 En un principio teniamos planteadas un scope mucho más grande con el proyecto, sin embargo por limitaciones del tiempo no hemos podido cubrir todo lo que en un principio nos propusimos. Esta es solo una lista de cosas que consideramos nos faltaron.
 
