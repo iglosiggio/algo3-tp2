@@ -1,4 +1,21 @@
-fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.500.100.png
+fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.500.100.png \
+		   segmentation/salidas/0.8.sintetico.png.500.1000.png \
+		   segmentation/salidas/0.0.mariquita.jpg.6000.-1.png \
+		   segmentation/salidas/0.0.mariquita.jpg.0.1000.png \
+		   segmentation/salidas/0.0.mariquita.jpg.600.-1.png \
+		   segmentation/salidas/0.0.mariquita.jpg.600.1000.png \
+		   segmentation/salidas/0.0.noche.jpg.600.-1.png \
+		   segmentation/salidas/0.2.noche.jpg.600.-1.png \
+		   segmentation/salidas/0.4.noche.jpg.600.-1.png \
+		   segmentation/salidas/0.6.noche.jpg.600.-1.png \
+		   segmentation/salidas/0.8.noche.jpg.600.-1.png \
+		   segmentation/salidas/1.0.noche.jpg.600.-1.png \
+		   segmentation/salidas/0.8.iglesia.jpg.600.-1.png \
+		   segmentation/salidas/0.8.iglesia.jpg.600.1000.png \
+		   segmentation/salidas/0.8.iglesia_2.jpg.600.-1.png \
+		   segmentation/salidas/0.8.iglesia_2.jpg.600.1000.png \
+		   segmentation/salidas/0.8.piramide_camello.jpg.300.-1.png \
+		   segmentation/salidas/0.8.piramide_camello.jpg.300.1000.png
 graficos_segmentacion=graficos/grilla.pdf
 experimentos_segmentacion=segmentation/experimentacion/variar-k.pdf \
 			  segmentation/experimentacion/variar-g-arreglo.pdf \
