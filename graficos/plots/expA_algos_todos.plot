@@ -19,6 +19,6 @@ set yrange [0 to 65536]
 set title sprintf("Tiempo gastado por cada algoritmo")
 set logscale y 2
 
-plot file_bellman_ford using 1:3 smooth unique with line title "bellman ford", \
-     file_dijkstra using 1:3 smooth unique with line title "dijkstra", \
-     file_pq_dijkstra using 1:3 smooth unique with line title "pq-dijkstra"
+plot file_bellman_ford using 1:3 smooth unique with line title "Bellman Ford", \
+     file_dijkstra using 1:3 smooth unique with line title "Dijkstra", \
+     file_pq_dijkstra using 1:3 smooth unique with line title "Dijkstra pq"
