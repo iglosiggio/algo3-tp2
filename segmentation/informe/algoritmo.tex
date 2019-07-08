@@ -21,15 +21,34 @@ Los algoritmos acá mostrados usan todos alguna implementación de la estructura
 
 \subsubsection{Desenfoque}
 
-La implementación del desenfoque depende se realiza generando el \emph{kernel}
-con el $\sigma$ apropiado. Y aprovecharnos de la \emph{separabilidad} del
-filtro para hacer una convolución en cada eje en lugar de tener que usar la
-matriz completa. Por otro lado elegimos limitar la cantidad de términos de la
-máscara a los que naturales desde $0$ hasta $\lceil 4 \sigma \rceil$ cuando
-necesitamos valores negativos de la normal los reflejamos en el \emph{kernel}
-calculado. El tope que escojemos hace que los coeficientes fuera del
-\emph{kernel} sean menores a $e^{-8}$ que son suficentemente pequeños cómo para
-no resultarnos relevantes.
+El desenfoque aplicado es un desenfoque gaussiano. En líneas generales la
+fórmula a aplicar es la siguiente:
+
+\[
+	f(x,y,\sigma) =
+		\sum_{j=0}^{alto} \! \sum_{i=0}^{ancho} \!
+			\frac{1}{2\pi\sigma^2}
+			e^{-\frac{{(x - j)}^2 + {(y - i)}^2}{2\sigma^2}}
+			\textit{imagen}[j][i]
+\]
+
+Puede observarse que no los píxeles más lejanos al pixel que queremos calcular
+aportan notablemente menos, por esto es que cuando implementamos el desenfoque
+limitamos la cantidad de vecinos a tener en cuenta. Otra optimización simple
+nace de precalcular los exponentes de $e$ dado que si sólo tenemos en cuenta
+los $k$ píxeles más cercanos entonces sólo operaremos con $k$ exponentes
+distintos\footnote{En la implementación esto se achica aún más dado que el
+filtro es separable (puede transformarse en una pasada vertical y una
+horizonal)}.
+
+La implementación del desenfoque se realiza generando una matriz de acuerdo al
+$\sigma$. Limitamos la cantidad de términos de la normal a calcular a los
+naturales desde $0$ hasta $\lceil 4 \sigma \rceil$ (cuando necesitamos valores
+negativos de la normal nos aprovechamos de la simetría de la misma). El tope
+que escojemos hace que los coeficientes que quedan fuera sean menores a
+$e^{-8}$ que son suficentemente pequeños cómo para no resultarnos relevantes.
+Nos aprovecharnos de la \emph{separabilidad} del filtro realizando una
+convolución en cada eje en lugar de tener que usar la matriz completa.
 
 \begin{algorithm}[H]
 \caption{Algoritmo para realizar un desenfoque gaussiano}
@@ -39,7 +58,7 @@ no resultarnos relevantes.
 	\Statex{} \Comment{} Por simpleza no están los chequeos de límites en la imagen
 	\State{} $\text{kernel} \is []$
 	\For{$i \is 0$ to $\lceil 4 \sigma \rceil + 1$}
-	\Comment{Coefficientes de la normal a usar}
+	\Comment{Coeficientes de la normal a usar}
 		\State{} $\text{kernel}[i]
 			\is \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{i^2}{2\sigma^2}}$
 	\EndFor{}
