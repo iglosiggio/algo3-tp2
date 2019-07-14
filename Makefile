@@ -15,7 +15,8 @@ fotos_segmentacion=segmentation/salidas/0.8.oso.jpg.500.100.png \
 		   segmentation/salidas/0.8.iglesia_2.jpg.600.-1.png \
 		   segmentation/salidas/0.8.iglesia_2.jpg.600.1000.png \
 		   segmentation/salidas/0.8.piramide_camello.jpg.300.-1.png \
-		   segmentation/salidas/0.8.piramide_camello.jpg.300.1000.png
+		   segmentation/salidas/0.8.piramide_camello.jpg.300.1000.png \
+		   segmentation/salidas/0.8.autitos.jpg.300.1000.png
 graficos_segmentacion=graficos/grilla.pdf
 experimentos_segmentacion=segmentation/experimentacion/variar-k.pdf \
 			  segmentation/experimentacion/variar-g-arreglo.pdf \

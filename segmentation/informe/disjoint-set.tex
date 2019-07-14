@@ -97,6 +97,26 @@ implementaciones con arreglo de componententes creemos que es esperable que
 presente un rendimiento levemente superior para valores de $k$ y $g$ muy bajos
 (dónde se realizan muy pocas llamadas a \textsc{Unir}).
 
+Para realizar estos experimentos tomamos una sola imagen como entrada
+(\texttt{autitos.jpg}) sobre la cuál experimentamos. La decisión de tomar una
+única imagen fué debido a que queremos medir el efecto de los parámetros en una
+imagen dónde estos tengan relevancia (en una imagen completamente plana variar
+$k$ o $g$ no cambiaría la segmentación resultante, las llamadas a \textsc{Unir}
+y \textsc{Buscar} serían siempre las mismas).
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/entradas-posta/autitos}
+		\caption{Entrada}
+	\end{subfigure}
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/salidas/{0.8.autitos.jpg.300.1000}.png}
+		\caption{Segmentación}
+	\end{subfigure}
+	\caption{$\sigma = 0.8,\ k = 300,\ g = 1000$.}
+\end{figure}
+
 \subsubsection{Resultados variando $k$}
 
 En el primer experimento decidimos medir el tiempo que tardaba el paso de
