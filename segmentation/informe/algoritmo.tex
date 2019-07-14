@@ -186,13 +186,14 @@ factor de juego que le corresponde a esa componente.
 \end{algorithm}
 
 La complejidad de este algoritmo si bien es simple requiere saber las
-complejidades de \Call{Buscar}{ds, $e$} y de \Call{Unir}{ds, $a$, $b$} las que
-serán $O(f)$ y $O(g)$ respectivamente\footnote{En secciones posteriores
-discutiremos la complejidad de éstas.}. Una vez notado esto tenemos un costo
-inicial de $O(w \times h)$ para construir el arreglo de resultados de
-$\tau(\text{e})$ seguido de una cantidad acotada de llamadas a \textsc{Buscar}
-y \textsc{Unir} por cada eje del grafo lo que nos arroja una complejidad de
-$O(w \times h \times (f + g))$.
+complejidades de \Call{Nuevo}{$s$}, \Call{Buscar}{ds, $e$} y de \Call{Unir}{ds,
+$a$, $b$} las que serán $O(s)$ (para todas las implementaciones), $O(f)$ y
+$O(g)$ respectivamente\footnote{En secciones posteriores discutiremos la
+complejidad de éstas.}. Una vez notado esto tenemos un costo inicial de $O(w
+\times h)$ para construir el arreglo de resultados de $\tau(\text{e})$ y el
+\textsc{Disjoint-Set} correspondiente. Hecho esto tenemo una cantidad acotada
+de llamadas a \textsc{Buscar} y \textsc{Unir} por cada eje del grafo lo que nos
+arroja una complejidad final de $O(w \times h \times (f + g))$.
 
 \subsubsection{Simplificación Greedy}
 

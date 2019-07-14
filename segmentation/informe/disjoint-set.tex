@@ -1,21 +1,49 @@
 \subsection{Estructuras para implementar \textsc{Disjoint-Set}}
 
 Como parte del trabajo la cátedra requirió implementar el \textsc{Disjoint-Set}
-con 3 estructuras distintas:
+con 3 estructuras distintas, las listamos en conjunto con la complejidad de las
+operaciones antes descriptas:
 
 \begin{itemize}
 	\item Representado como arreglo de componentes
+	\begin{itemize}
+		\item \Call{Nuevo}{s}: $O(s)$
+		\item \Call{Buscar}{ds, $e$}: $O(1)$
+		\item \Call{Unir}{ds, $a$, $b$}: $O(n)$
+		\item \Call{Tamaño}{ds, $e$}: $O(1)$
+	\end{itemize}
 	\item Representado como árbol
+	\begin{itemize}
+		\item \Call{Nuevo}{s}: $O(s)$
+		\item \Call{Buscar}{ds, $e$}: $O(n)$
+		\item \Call{Unir}{ds, $a$, $b$}: $O(1)$
+		\item \Call{Tamaño}{ds, $e$}: $O(1)$
+	\end{itemize}
 	\item Representado como árbol con \emph{path compression}
+	\begin{itemize}
+		\item \Call{Nuevo}{s}: $O(s)$
+		\item \Call{Buscar}{ds, $e$}: $O(\alpha(s))$
+			\textbf{(amortizado)}
+		\item \Call{Unir}{ds, $a$, $b$}: $O(\alpha(s))$
+			\textbf{(amortizado)}
+		\item \Call{Tamaño}{ds, $e$}: $O(\alpha(s))$
+			\textbf{(amortizado)}
+	\end{itemize}
 \end{itemize}
 
-En sumado a esto, las representaciones de árbol pueden elegir si unir por mayor
+Sumado a esto, las representaciones de árbol pueden elegir si unir por mayor
 rango o por mayor tamaño (en nuestro caso particular implementamos por mayor
-tamaño). Esta sección del informe analiza el rendimiento de las distintas
+tamaño).
+
+\subsubsection{Resultados con distintos tamaños de imagen}
+
+\subsubsection{Influencia de los parámetros}
+
+Esta sección del informe analiza el rendimiento de las distintas
 representaciones variando los parámetros $k$ y $g$\footnote{Valores de $\sigma$
 mayores aumentarían el tiempo requerido de procesamiento pero ese procesamiento
 se realiza antes de cualquier llamada a las estructuras que son relevantes a
-esta sección del informe.}
+esta sección del informe.}.
 
 Dado que \textsc{Buscar} es considerablemente más simple en las
 implementaciones con arreglo de componententes creemos que es esperable que
