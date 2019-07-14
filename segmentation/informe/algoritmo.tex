@@ -32,7 +32,7 @@ fórmula a aplicar es la siguiente:
 			\textit{imagen}[j][i]
 \]
 
-Puede observarse que no los píxeles más lejanos al pixel que queremos calcular
+Puede observarse que los píxeles más lejanos al pixel que queremos calcular
 aportan notablemente menos, por esto es que cuando implementamos el desenfoque
 limitamos la cantidad de vecinos a tener en cuenta. Otra optimización simple
 nace de precalcular los exponentes de $e$ dado que si sólo tenemos en cuenta
@@ -94,6 +94,12 @@ convolución en cada eje en lugar de tener que usar la matriz completa.
 \end{algorithmic}
 \end{algorithm}
 
+Puede observarse que la construcción del kernel nos llevará $O(\sigma)$
+operaciones seguidas de $O(w \times h \times \sigma)$ para cada una de las
+convoluciones. Entonces el costo del desenfoque es $O(w \times h \times
+\sigma)$ (lineal respecto del tamaño de la imagen, exponencial respecto del
+tamaño de $\sigma$).
+
 \subsubsection{Construcción del grafo}
 
 Para construir el grafo utilizamos la 8-vecindad cómo ya dijimos anteriormente.
@@ -141,6 +147,15 @@ vértices de nuestro grafo) y agregar los ejes necesarios.
 \end{algorithmic}
 \end{algorithm}
 
+Puede observarse que por cada píxel se agregan a lo sumo 4 ejes. Dada la
+estructura elegida para representar el grafo (un arreglo de ejes con la memoria
+reservada previamente) la inserción es $O(1)$ y por estar acotada la cantidad
+de ejes por vértice entonces es $O(1 + d)$ con $d$ el costo de la función de
+distancia el procesar cada píxel de la imagen. Dado que procesamos toda la
+imagen la complejidad resultante es $O(w \times h \times d)$ (y cómo nuestra
+función de distancia es $O(1)$ entonces tenemos un coste lineal respecto del
+tamaño de la imagen).
+
 \subsubsection{Segmentación}
 
 Con los ejes ya ordenados el proceso de segmentar la imagen es muy simple.
@@ -170,6 +185,15 @@ factor de juego que le corresponde a esa componente.
 \end{algorithmic}
 \end{algorithm}
 
+La complejidad de este algoritmo si bien es simple requiere saber las
+complejidades de \Call{Buscar}{ds, $e$} y de \Call{Unir}{ds, $a$, $b$} las que
+serán $O(f)$ y $O(g)$ respectivamente\footnote{En secciones posteriores
+discutiremos la complejidad de éstas.}. Una vez notado esto tenemos un costo
+inicial de $O(w \times h)$ para construir el arreglo de resultados de
+$\tau(\text{e})$ seguido de una cantidad acotada de llamadas a \textsc{Buscar}
+y \textsc{Unir} por cada eje del grafo lo que nos arroja una complejidad de
+$O(w \times h \times (f + g))$.
+
 \subsubsection{Simplificación Greedy}
 
 Una vez segmentada la imagen se puede realizar un paso final que elimine las
@@ -198,6 +222,11 @@ parecida).
 \end{algorithmic}
 \end{algorithm}
 
+Bajo la misma argumentación que en el algoritmo de segmentación este paso
+depende del coste de la implementación del \textsc{Disjoint-Set}. El coste de
+\textsc{Tamaño} será $O(h)$ dejándonos así un coste de $O(w \times h \times (f
++ g + h))$ para este paso.
+
 \subsubsection{Vista aérea del algoritmo}
 
 A modo de unificar todos los pasos ya expuestos en detalle podemos resumir la
@@ -217,3 +246,12 @@ operación del algoritmo en pocas líneas:
 \EndFunction{}
 \end{algorithmic}
 \end{algorithm}
+
+El algoritmo de ordenamiento podría ser $O(n \log n)$ de ser uno de comparación
+clásico o $O(n \times w)$ (con $w$ el tamaño de las distancias) usando un
+algoritmo de ordenamiento no-comparativo como \textsc{Radix-Sort}.  Con esto en
+cuenta podemos sumar las complejidades de cada paso y llegar a una de $O(w
+\times h \times (\sigma + f + g + h + \log n))$ o $O(w \times h \times (\sigma
++ f + g + h + w))$ de acuerdo al ordenamiento elegido (de aquí en más
+utilizaremos la cota de complejidad con ordenamiento por comparación debido a
+que fué el elegido en nuestra implementación).
