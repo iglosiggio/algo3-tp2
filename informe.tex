@@ -263,9 +263,11 @@ Costos algoritmos que citaremos:
 \begin{itemize}
 	\item Floyd Warshal. Algoritmo $n$ a $n$ $\rightarrow$  $O(n^3)$
 	\item Bellman Ford. Algoritmo $1$ a $n$ $\rightarrow$ $O(n \times m)$
-	\item Dijkstra. Algoritmo $1$ a $n$ $\rightarrow$ $O(n^2+m)$
-	\item Dijkstra con prioridad. Algoritmo $1$ a $n$ $\rightarrow$  $O(m + n \times log (n))$
+	\item Dijkstra. Algoritmo $1$ a $n$ $\rightarrow$ $O(n^2)$
+	\item Dijkstra con prioridad. Algoritmo $1$ a $n$ $\rightarrow$  $O((m + n) \times log (n))$
 \end{itemize}
+
+La demostración de correctitud y complejidad se encuentran en las Clase (6) y (7) de la teórica. (6) para los algoritmos de $1$ a $n$ y (7) para Floyd Warshall.
 
 Analizemos primero Floyd Warshall, por ser un algoritmo $n$ a $n$ este calcula todas las distancias a todos los origenes, esto generá que en su costo real al ejecutarse sobre $G'$ calcule las distancias de todos los origenes incluyendo estar en una ciudad con $k$ nafta $(k \neq 0)$. Se deben descartar todas aquellas soluciones cuyo origen y destino no posea $k = 0$. 
 
