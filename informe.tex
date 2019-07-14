@@ -132,81 +132,101 @@ Dadas ambas funciones el algoritmo que aplicaremos sobre G para obtener los resu
 
 Hablaremos en detalle de los pasos (1) y (3), mientras que en el paso (2) solo haremos aclaraciones.
 
-\subsubsection{Transformación del grafo $f(V)$}
+\subsubsection{Transformación del grafo $f(G)$}
 
 Para aplicar camino minimo es necesario eliminar la noción del precio $q_i$ en función de los vertices, solo puede existir peso en las aristas. Además sería conveniente que el peso de las aristas resultantes de $G'$ representen costos, de ser así la $\sum d'_{x,y}$ representaría el costo total del camino $P$.  
 
-Se sabe que la cantidad de litros de nafta que puede llevar nuestro vehiculo esta acotada por una constante $W$ de 60 litros. 
+Se sabe que la cantidad de nafta que puede llevar nuestro vehiculo esta acotada por una constante $W$ que rinde máximo 60 kilometros, y para aplicar camino minimo, requerimos eliminar dicho estado del vehiculo, ya que el costo de ir de una ciudad a otra se modifica si tengo pre cargada nafta. 
 
-Debido a que W es acotado es razonable buscar que $f(V)$ dependa de esta constante, ya que la complejidad de dicha transformación sería $O(W * (n + m))$ el cual como $W$ es constante no afectaría la complejidad.
+Debido a que W es acotado es razonable buscar que $f(G)$ dependa de esta constante, ya que la complejidad de dicha transformación sería $O(W * (n + m))$ el cual como $W$ es constante no afectaría la complejidad.
 
-Es necesario redefinir entonces como será $V(G')$ y $E(G')$.
+Es necesario redefinir entonces como será $V(G')$ y $E(G')$ dado un grafo $G$. 
 
-lo primero que haremos será multiplicar cara vertice $C_i$ por W estados posibles\footnote{Si $(W = 60)$ los estados son $61$, puedo estar en $C_i$ con: (0..60) lirtros de nafta.} entonces si:
+$V(G')$ entonces se generará multiplicando cara vertice $c_i$ por los W estados\footnote{Si $(W = 60)$ los estados del vehiculo son 61, se incluye el tanque vacio.} del vehiculo, entonces si:
 
-$V$ posee  N nodos. 
+$G$ posee  N nodos. 
 
-$V'$ posee N * 61 tal que si $C_i$ es nodo en V $\rightarrow$ $\exists$ $\sum_{k=0}^{W} C'_{i * k}$ nodos en $V'$
+$G'$ posee N * 61 tal que si $c_i$ es nodo en G $\rightarrow$ $\exists$ $\sum_{k=0}^{W} c'_{i * k}$ nodos en $G'$
 
-por notación llamaremos $C'_{i_0}$ a $C'_{i_{60}}$ a nuestros vertices en $V'$ ahora bien necesitamos redefinir nuestras aristas en función del costo efectivo. Tendremos 2 tipos de aristas.
+Se llamará $c'_{i_0}$ a $c'_{i_{60}}$ a nuestros vertices en $G'$ representando cada vertice estar en $c_i$ con $[0..60]$ de nafta en el vehiculo. 
 
-\begin{itemize}
-	\item (1) que representa una arista de carga de combustible y comunica los $W$ estados de un nodo. Es razonable considerar que si yo estoy en una ciudad con k litros y quiero agregar un litro de nafta el costo será el precio de cargar nafta en dicha ciudad. Es trivial asumir que en general tendremos que dado un estado $C'_{i_k}$ el costo para ir a $C'_{i_{k+1}}$ será exactamente $p_i$ para toda $d_{k,k+1}$.
-\end{itemize}
-
-Es decir de nuestra transformaciòn tiene  $N * (W - 1$) aristas para movernos entre los estados $C'_{i_k}$
+para $E(G')$ necestiamos representar el costo en las aristas de forma tal que eliminimos el precio de los vertices. Para esto existirán 2 tipos de aristas.
 
 \begin{itemize}
-	\item (2) que representa una arista de movimiento entre nodos $(C_A, C_B)$, en general por cada $d_{C_A,C_B} \in m$ de $V$ diremos que en $V'$ esto solo sucederá si se cumple que $C'_{A_k}$ $\exists$ $d'_{A_k,B_j}$ $\leftrightarrow$  $k - d_{A,B} = j$. Es decir ir de $C_A$ a $C_B$ solo es posible si la cantidad de litros con la que voy a llegar a B es la cantidad de litros que tenía en A menos la distancia. Y el costo de esta arista en particular es $0$ debido a que para que sea posible ya cargue combustible en A, lo que significa que ya pague el precio.
+	\item (1) \textbf{Aristas de carga} que representan carga de combustible y comunican los $W$ estados de un nodo. Considerar que si el vehiculo se encuentra en una ciudad con $k$ nafta y se quiere agregar nafta para 1 kilometro el costo de agregar será el precio $q_i$. Es trivial asumir que en general tendremos que dado un estado $c'_{i_k}$ el costo para ir a $c'_{i_{k+1}}$ será exactamente $q_i$ para toda $d_{k,k+1}$.
+	
+	Luego se agregan 59 aristas por nodo, todas con su respectivo costo $q_i$. Tenemos $N * (W - 1$) aristas en total.
 \end{itemize}
 
-Con estas condiciones generamos $V'$, pero necesitamos comprobar si esta transformación es válida. Para ello nos alcanza con demostrar que los resultados $R$ de $V$ existen en $V'$ en particular nos alcanza con decir que $(R \subset R')$. Si esto sucede entonces $\exists$ $g(R')$ que transforma a $R$. No necesariamente trivial.
 
-Imaginemos que existe costo efectivo minimo en $V$  $\exists costo_{min} \in (C_A,C_B)$ tal que no existe en $V'$.
 
-De ser así existe una combinación de formas de cargar combustible en distintas $C_i$ tal que $\sum (p_i * l_i)$ no existe en $R'$ entonces existe alguna (o varias) formas de cargar combustible en una ciudad $(p_i * l_k)$ que no esta en $V'$
+\begin{itemize}
+	\item (2) \textbf{Aristas de movimiento} que representan el movimiento entre todo par de ciudades $(c_a, c_b)$ de $G$, en general por cada $d_{c_a,c_b} \in m$ de $G$ diremos que en $G'$ esto solo sucederá si se cumple que:
+	
+	Dado $(c'_{a_k}, c'_{b_j})$ $\exists$ $d'_{a_k,b_j}$ $\leftrightarrow$  $k - d_{a,b} = j$, con $k,j \in [0..60]$. Es decir ir de $c_a$ a $c_b$ en $G'$ solo es posible si la cantidad de nafta con la que voy a llegar a $c_b$ es la cantidad de nafta que tenía en $c_a$ menos la distancia. al exigir $j \in [0..60]$ además nos aseguramos llegar con una cantidad de combustible válida, no negativa y que no excede los límites de combustible del vehiculo.
+	 
+	Finalmente el peso de cada arista de este tipo en particular será $0$ debido a que solo es posible usarla, si se tiene $k$ suficientemente grande para atravesar la distancia. Es decir ya pague los costos debido a que e tenido que pasar por Aristas de carga de combustible.
+\end{itemize}
 
-Sin embargo en $V'$ los W estados que representan un nodo son todas las formas de estar en una ciudad con $l_x$ litros previamente cargados.
+Con estas condiciones generamos $G'$, pero necesitamos comprobar si esta transformación es válida. Para esto se debe:
 
-Y agregar nuevos litros significa moverme entre los estados agregando para cada $C'_{i_k}$ el costo $p_i$ para ir al $C'_{i_{k+1}}$ es decir que agregar $l_k$ litros es $\sum_0^Y d'_{k,k+1}$ dado que $p_i$ = $d'_{k,k+1}$ es explicitamente $(l_k * p_i)$ para cualquier $l_k$ que mantenga el rango $W \in (0..61)$
+\begin{itemize}
+ \item Demostrar que todos los resultados $R$ de $G$ existen en $G'$  
+ \item Dado un $R'$ de $G'$ probar que no genera soluciones potencialmente mejores.
+ \item Y en particular que existe una forma de a partir de $G'$ extraer las soluciones de $G$ es decir $\exists g(R')$
+\end{itemize}
 
-Dado que $\forall (C'_{A_i}, C'_{B_j}) \exists d_{A_i,B_j}$ si se cumple el item \textbf{(2)} estoy representando todas las formas posibles de llegar a destino con $x$ combustible cargado mi estado inicial $C_A$ es $C'_{A_0}$\footnote{Es condición del problema que arranco con el tanque vacio.} y tengo todas las formas posibles de llegar a $C_{B}$ con (0..W) litros en el tanque, no perdi soluciones.
+La primera parte se probará por el absurdo, si existierá costo efectivo minimo en $G \in (c_a,c_b)$ tal que no existe en $G'$.
 
-Sin embargo tengo soluciones de más, en particular tengo W formas distintas de llegar a $C_B$, y solo me interesa una. Abordaremos este tema en detalle cuando definamos $g(R')$. Una posible implementación del algoritmo sería:
+De ser así existe una combinación de formas de cargar combustible en distintas $c_i$ tal que $\sum (q_i * l_i)$ no existe en $R'$ entonces existe alguna (o varias) formas de cargar combustible en una ciudad que no está incluida en $G'$
+
+Sin embargo en $G'$ cada vertice representa los [0..60] estados del tanque es decir todas las formas de estar en una ciudad con $x$ cantidad de nafta en el vehiculo.
+
+Y agregar nafta significa moverme entre los estados agregando para cada $c'_{i_k}$ el costo $p_i$ para ir al $c'_{i_{k+1}}$ es decir que agregar $k$ de nafta en $G'$ es $\sum_0^k d'_{i,i+1}$ dado que $q_i$ = $d'_{k,k+1}$ es explicitamente $(k * p_i)$ para cualquier $k$ que mantenga el rango $W$.
+
+Dado que $\forall (c'_{a_i}, c'_{b_j}) \exists d_{a_i,b_j}$ si se cumple el item \textbf{(2)} en particular no estoy perdiendo caminos de $G$, estoy representando todas las formas posibles de llegar a destino con $x$ combustible. luego formas posibles de llegar a $c_{b}$ sin perdida de generalidad con [0..60] en el tanque, no perdi soluciones.
+
+Esto alcanza para probar que todo camino en $G$ existe en $G'$ Sin embargo el espacio de soluciones $R'$ genera más soluciones de las que existían en $G$, en particular es condición del problema que el tanque arranca vacio pero en $G'$ nada me inhibe de arrancar en un nodo con $c'_{a_k}$ con $k \neq 0$. Luego la solución que obtengo es potencialmente mejor, ya que necesite cargar menos combustible para llegar a destino.
+
+Entonces para que nuestra representación sea válida es necesario contemplar el caso y definir como solución de interés a aquellas que arranquen con $k = 0$ y ignorar aquéllas que inicien con un estado no vacío en el tanque.
+
+Si se arranca con el tanque vacío dadas 2 ciudades $(c_a, c_b)$ luego en $G'$ el costo no puede ser mejor. Al estar contemplado que solo existe una arista entre $c'_{a_0}, c'_{b_j}$ si y solo si tengo suficiente nafta en $c_a$ para llegar a $c_b$ su costo es mayor o igual al $P_{min}$ buscado. En particular $c'_a$ puede llegar a $c_b$ con [0..60] nafta de sobra en el tanque. así que es trivial ver que existen soluciones de más, pero ninguna mejor al minimo. 
+
+Luego la representación es correcta, una posible implementación de $f(G)$ sería:
 
 \begin{algorithm}[H]
-	\caption{$f(V)$}
+	\caption{$f(G)$}
 	\begin{algorithmic}[1]
 		\item[\textbf{Inicialización:}]
 		\item[] \begin{itemize}
-			\item[] $V_n = $ cantidad de nodos en V.
-			\item[] $V_{aristas(i)} = $ tripla $(origen, destino, peso)$ de la i-esima arista.
+			\item[] $G_n = $ cantidad de nodos en V.
+			\item[] $G_{aristas(i)} = $ tripla $(origen, destino, peso)$ de la i-esima arista.
 			\item[] $W = 61$
 		\end{itemize}
 		\item[\textbf{Funciones auxiliares:}]
 		\item[] \begin{itemize}
-			\item[] \Call{AgregarArista}{$C_a,C_b,peso$} agrega $d_{C_a,C_b}$ al grafo $V'$
+			\item[] \Call{AgregarArista}{$c_a,c_b,peso$} agrega $d_{c_a,c_b}$ al grafo $G'$
 		\end{itemize}
 		\Statex
 		\Function{TransformarGrafo}{$V, n, m$}
-		\State $V'_n \is V_n * W$
+		\State $|V(G')| \is |V(G)| * W$
 		\For{$(i \in (0..n))$}
 		\Comment Aristas de carga de combustible
 		\For{$(k \in (1..W))$}
-		\State $C_{i_k} \is i * W + k$
-		\State \Call{AgregarArista}{$C_{i_k} - 1,C_{i_k},peso$}
+		\State $c_{i_k} \is i * W + k$
+		\State \Call{AgregarArista}{$c_{i_k} - 1,c_{i_k},q_i$}
 		\EndFor
 		\EndFor
 		\State
 		
 		\For{$(i \in (0..m))$}
-		\State $C_a,C_b,d_{a,b} \is V_{aristas(i)}$
+		\State $c_a,c_b,d_{a,b} \is G_{aristas(i)}$
 		\Comment Aristas de transición de nodos
 		\For{$(k \in (1..W))$}
 		\If{$k \geq d_{a,b}$}
 		\Comment Agrego las aristas bidireccionalmente
-		\State \Call{AgregarArista}{$C_a + k,C_b + k - d{a,b},0$}
-		\State \Call{AgregarArista}{$C_b + k,C_a + k - d{a,b},0$}
+		\State \Call{AgregarArista}{$c_a + k,c_b + k - d_{a,b},0$}
+		\State \Call{AgregarArista}{$c_b + k,c_a + k - d_{a,b},0$}
 		\EndIf
 		\EndFor
 		\EndFor
@@ -221,43 +241,43 @@ Sin embargo tengo soluciones de más, en particular tengo W formas distintas de 
 
 \textbf{Nota}: Si bien es cierto que W es acotado, expreso la complejidad del algoritmo así para mostrar lo fuertemente dependiente que es del parámetro la transformación. 
 
-A fines prácticos el algoritmo generá un ordenamiento en el cual los primeros $(0..60)$ nodos representan el nodo $0$ de $V$, los siguentes $(0..60)$ nodos al nodo $1$ de $V$ y así sucesivamente. El ordenamiento fue una desición de implementación. Sin embargo cualquier ordenamiento válido puede ser correcto, no necesariamente el aqui propuesto.
+A fines prácticos el algoritmo generá un ordenamiento en el cual los primeros $(0..60)$ nodos representan el nodo $0$ de $V$, los siguentes $(0..60)$ nodos al nodo $1$ de $V$ y así sucesivamente. El ordenamiento fue una desición de implementación. Sin embargo cualquier ordenamiento válido puede ser correcto, no necesariamente el aqui propuesto. 
 
-\subsubsection{como obtener los resultados de $V$ con $g(R')$}
 
-Ahora podemos ejecutar algoritmos de camino minimo sobre $V'$ para obtener sus resultados. No nos interesa los detalles sobre como es la estructura de $R$ y $R'$, ya que los resultados son las distancias minimas entre 2 ciudades diremos que son una lista de tuplas $(origen, destino, costo)$
 
-Sabemos que dado una ciudad de origen, su destino, esta representado por W nodos. Una idea intuitiva para pensar esto sería decir que dado un destino $C_b$ el costo minimo existe en alguno de sus $(C'_{b_0}...C'_{b_{60}})$ nodos. Entonces se puede calcular cual es el costo minimo a todos los estados posibles y nos quedamos solo con el minimo.
+\subsubsection{como obtener los resultados de $G$ con $g(R')$}
 
-Sin embargo este calculo no es necesario, si definamos que significa un nodo en $V'$ sería estar en una ciudad $C_x$ con una cierta cantidad de litros. Ahora tomemos un nodo $C'_ {x_k}$ cualquiera con $(k \neq 0)$ Su distancia es minima debido a que se emplea un algoritmo de camino minimo y sobra $k$ de combustible.
+Luego se puede ejecutar algoritmos de camino minimo sobre $G'$ para obtener sus resultados. No nos interesa los detalles sobre como es la estructura de $R$ y $R'$, ya que los resultados son las distancias minimas entre 2 ciudades diremos que son una lista de tuplas $(origen, destino, costo)$. Si nos interesa aclarar nuevamente que en $R'$ solo se considerán de interés resultados que inician con el tanque vacío.
 
-la idea intuitiva que podemos asumir es que si tengo $k$ litros de sobra en mi tanque al llegar al destino, entonces existe un camino en el cual llego al destino sin pagar ese sobrante. Ese camino es justamente el camino minimo que va al destino con $k = 0$.   
+Dado un origen, su destino, esta representado por W nodos. Una idea intuitiva para pensar esto sería decir que dado un destino $c_b$ el costo minimo existe en alguno de sus $(c'_{b_0}...c'_{b_{60}})$ nodos. Fijado un nodo destino $c'_{b_k}$ este representa estar en la ciudad $c_b$ de $G$ con $k$ de nafta. Ahora asumamos $k \neq 0$ luego su camino $P$ es minimo y representa la minima forma de llegar a $c_b$ con $k$ de combustible.
 
-Si consideramos el problema, solo nos interesa llegar al destino, no nos interesa llegar con un $k \neq 0$ cargado en el auto, ya que ese sobrante tiene un costo.
+Sin embargo para todo $c_b$ si existe una forma de llegar a él con $k$ combustible $k \neq 0$ en particular también se puede llegar con $k-1$ combustible, la cual su camino $P$ representa un costo menor debido a que cargo una unidad menos. Inductivamente llegamos a que $k=0$ es $P_{min}$
 
-Entonces para obtener solo las distancias de $V'$ que representan a un costo minimo en el problema original solo nos interesan aquellos nodos de origen y destino que sean de la forma 
-$C_{x_0}$ a $C_{y_0}$ con costo minimo.
-
+Finalmente la conclusión que obtenemos es que las distancias de $G'$ que representan una solucion en $G$ serán aquellas cuyos nodos de origen y destino tengan $k = 0$. Si el origen de $P$ no es vacío, no es un resultado válido. Luego si el destino de $P$ no lo es, el resultado obtenido no es minimo.
 
 \subsubsection{Sobre los algoritmos de camino minimo}
 
-Todos los algoritmos reciben como parametro $V'$ como entrada con cualquier tipo de representación válida de un grafo (matriz, lista de adyacencia, etc), en el caso de los algoritmos $1$ a $n$ también necesitan que se le especifique el nodo de origen. Los outputs son siempre distancias al origen.
+Todos los algoritmos reciben como parametro $G'$ como entrada con cualquier tipo de representación válida de un grafo (matriz, lista de adyacencia, etc), en el caso de los algoritmos $1$ a $n$ también necesitan que se le especifique el nodo de origen. Los outputs son siempre distancias al origen.
 
 Costos algoritmos que citaremos:
 \begin{itemize}
 	\item Floyd Warshal. Algoritmo $n$ a $n$ $\rightarrow$  $O(n^3)$
 	\item Bellman Ford. Algoritmo $1$ a $n$ $\rightarrow$ $O(n \times m)$
 	\item Dijkstra. Algoritmo $1$ a $n$ $\rightarrow$ $O(n^2+m)$
-	\item Dijkstra con prioridad. Algoritmo $1$ a $n$ $\rightarrow$  $O(m + log (n))$
+	\item Dijkstra con prioridad. Algoritmo $1$ a $n$ $\rightarrow$  $O(m \times log (n))$
 \end{itemize}
 
-Analizemos primero Floyd Warshall, por ser un algoritmo $n$ a $n$ este calcula todas las distancias a todos los origenes, esto generá que en su costo real al ejecutarse sobre $V'$ calcule las distancias de todos los origenes incluyendo estar en una ciudad con $k$ litros de nafta con $(k \neq 0)$. En teoría esto no afecta complejidad debido a que W es acotado.
+Analizemos primero Floyd Warshall, por ser un algoritmo $n$ a $n$ este calcula todas las distancias a todos los origenes, esto generá que en su costo real al ejecutarse sobre $G'$ calcule las distancias de todos los origenes incluyendo estar en una ciudad con $k$ nafta $(k \neq 0)$. Se deben descartar todas aquellas soluciones cuyo origen y destino no posea $k = 0$. 
 
-Sin embargo en la práctica calculara $(C'_0..C'_W)$ origenes cuando lo que necesitamos es solo el $C'_0$ especificado en la sección anterior lo que podría implicar costes mayores (Ver experimentación para más detalles).
+En teoría esto no afecta complejidad debido a que W es acotado. Sin embargo en la práctica calculara $(c'_{i_0}..c'_{i_{60}}$ origenes cuando lo que necesitamos es solo el $c'_0$ especificado en la sección anterior. lo que podría implicar costes mayores (Ver experimentación para más detalles).
 
-En el caso de los algoritmos $1$ a $n$ necesitamos transformarlos en algoritmos $n$ a $n$. Sin embargo tenemos espacio para optimizar, dado que solo nos interesan los caminos minimos que parten de un origen que implicitamente representa tener el tanque vacio. Podemos aprovechar y correrlo solo para los nodos que representen esa condición. Es decir todos los $C'{x_0}$ origenes y $C'{y_0}$ destinos
+En el caso de los algoritmos $1$ a $n$ necesitamos transformarlos en algoritmos $n$ a $n$. Sin embargo tenemos espacio para optimizar, dado que solo nos interesan los caminos minimos que parten de un origen que implicitamente representa tener el tanque vacio. Podemos aprovechar y correrlo solo para los nodos que representen esa condición. Es decir todos los $c'_{i_0}$ origenes y $c'_{y_0}$ destinos
 
 Realizada esta tarea los algoritmos de camino minimo $1$ a $n$ nodos, pasan a tener un grado más en su complejidad y ser algoritmos $n$ a $n$.
+
+\subsubsection{Analisis de densidad de $G'$}
+
+
 
 \subsubsection{Experimentación}
 
