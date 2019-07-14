@@ -21,4 +21,4 @@ set ylabel "Tiempo (ms)"
 set title sprintf("Experimentos vs best-fit\nCorrelacion: %f", DATA_correlation)
 
 plot file using 1:3 with point pointtype 15 pointsize 0.3 title "Dijkstra pq", \
-	 f(x) with line title "Best fit para f(x) = kn^3"
+	 f(x) with line title "Best fit para f(x) = kn * (n+m) * log(n)"

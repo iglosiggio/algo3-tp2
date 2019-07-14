@@ -371,7 +371,7 @@ Se tomará un $m$ poco denso entonces, debido a que no se lo considera el objeto
 \includegraphics[width=\linewidth]{{graficos/expA_algos_todos}.pdf}
 \captionof{figure}{Comparación de algoritmos (Excluido Floyd Warshall)}
 
-\textbf{Nota:} En este último experimento, Dijkstra al llegar a $n = 60$ se excedió del tiempo límite marcado. Observar que dijkstra sin cola de prioridad es $O(n^2+m)$, si bien en $G'$ tenemos $\frac{n}{61}$ nodos de origen donde ejecutarlo. Es de esperable que su comportamiento no sea tan óptimo.
+\textbf{Nota:} En este último experimento, Dijkstra al llegar a $n = 60$ se excedió del tiempo límite marcado. Observar que dijkstra sin cola de prioridad es $O(n^2)$, si bien en $G'$ tenemos $\frac{n}{61}$ nodos de origen donde ejecutarlo. Es de esperable que su comportamiento no sea tan óptimo.
 Finalmente como podemos observar Dijkstra con prioridad y Bellman Ford muestra una velocidad superior al resto, siendo Bellman Ford un poco más rapido. Consideramos que esta diferencia se debe a que insertar en la cola de priordad, es menos efectivo que insertar en una cola común como hace Bellman Ford.
 
 La conlcusión que sacamos es que esto no significa que Dijkstra sea malo, solo que no performa mejor que Bellman Ford en los tipos de grafos que generá $f(G)$. En particular observamos que $G'$ muestra un mejor comportamiento con aquellos algoritmos que dependen de $m$.
@@ -379,18 +379,29 @@ La conlcusión que sacamos es que esto no significa que Dijkstra sea malo, solo 
 Por último corroboraremos los best-fit de cada algoritmo para ver si efectivamente están respetando sus complejidades.
 
 \begin{center}
+	\includegraphics[width=12cm]{{graficos/dijkstra_correlacion}.pdf}
+	\captionof{figure}{Dijkstra}
+\end{center}
+
+En el caso de dijkstra su correlación y fit fueron muy buenos. su complejidad y fit de k esta configurado como $O(n^3)$ debido a que debe ser ejecutado $n$ veces. Lo mismo sucederá con los siguientes algoritmos $1$ a $n$.
+
+Consideramos al igual que Floyd dado que su complejidad depende de $n$ es un comportamiento razonable esperar que sea menos óptimo que aquellos que poseen su complejidad en función de la cantidad de aristas.
+
+Por último analizaremos las correlaciones de los algoritmos que si dependen de $m$ siendo estos Dijkstra con prioridad y Bellman Ford. Sus correlaciones son las siguientes:
+
+\begin{center}
 \includegraphics[width=12cm]{{graficos/bellman_ford_correlacion}.pdf}
 \captionof{figure}{Bellman Ford}
-\includegraphics[width=12cm]{{graficos/dijkstra_correlacion}.pdf}
-\captionof{figure}{Dijkstra}
 \includegraphics[width=12cm]{{graficos/pq_dijkstra_correlacion}.pdf}
 \captionof{figure}{Dijkstra con prioridad}
 \end{center}
 
-Como podemos observar efectivamente están mostrando una buena correlación. Damos por concluida nuestra experimentación con los resultados obtenidos, siendo Bellman Ford el algoritmo que mostro mejores resultados. 
+Como podemos observar tanto Bellman Ford como Dijkstra con prioridad muestran una correlación considerablemente menor a los algoritmos anteriores. De hecho en $Fig20$ se puede notar que el fit de Bellman Ford es observablemente malo.
+
+Creemos que esto se debe a que la forma en la que se generá $G'$ inhibe a ambos algoritmos de llegar al peor caso, dejando muy pocos casos desfavorables en las pruebas. Dijkstra con prioridad también mostro mala correlación. En ambos casos esto puede suceder debido a que su complejidad depende de $m$ el cuál sin importar que tan denso sea en $G$ observamos que no alcanza densidad suficiente en $G'$
 
 
-\subsubsection{Trabajo Futuro sección Parte 2}
+\subsubsection{Consideraciones y Trabajo Futuro de la sección Parte 2}
 
 En un principio teniamos planteadas un scope mucho más grande con el proyecto, sin embargo por limitaciones del tiempo no hemos podido cubrir todo lo que en un principio nos propusimos. Esta es solo una lista de cosas que consideramos que nos faltaron en la parte 2.
 
