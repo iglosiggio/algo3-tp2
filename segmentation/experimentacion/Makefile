@@ -50,10 +50,10 @@ variar-g: binarios-actualizados
 distintas-fotos: binarios-actualizados
 	rm -f salidas/foto_a.arreglo.resultados salidas/foto_a.arbol.resultados \
 		salidas/foto_a.arbol-compr.resultados
-#	rm -f salidas/foto_b.arreglo.resultados salidas/foto_b.arbol.resultados \
-#		salidas/foto_b.arbol-compr.resultados
-#	rm -f salidas/foto_c.arreglo.resultados salidas/foto_c.arbol.resultados \
-#		salidas/foto_c.arbol-compr.resultados
+	rm -f salidas/foto_b.arreglo.resultados salidas/foto_b.arbol.resultados \
+		salidas/foto_b.arbol-compr.resultados
+	rm -f salidas/foto_c.arreglo.resultados salidas/foto_c.arbol.resultados \
+		salidas/foto_c.arbol-compr.resultados
 	for foto in $$(seq 100 100 700); do \
 		$(MAKE) K=300 G=-1 ENTRADA=a.$$foto.txt \
 			salidas/foto_a.$$foto.arreglo.300.-1.data \
@@ -83,6 +83,13 @@ binarios-actualizados:
 
 variar-k.pdf: variar-k.plot
 	./variar-k.plot
+
+distintas-fotos-%.pdf: distintas-fotos.done
+	@
+
+distintas-fotos.done: distintas-fotos.plot binarios-actualizados
+	./distintas-fotos.plot
+	touch distintas-fotos.done
 
 variar-g-%.pdf: variar-g.done
 	@
