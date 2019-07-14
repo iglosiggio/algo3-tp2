@@ -2,11 +2,11 @@
 # Eje X = Algoritmo
 # Eje Y = Tiempo
 
-file = "../../cheapest-path/series/pq-dijkstra.expB.series"
+file = "../../cheapest-path/series/pq-dijkstra.expA.series"
 
 salida = "../pq_dijkstra_correlacion.pdf"
 
-f(x) = k * x**3 
+f(x) = k * x * ((x * 3) + x) * log(x)
 
 fit f(x) file using 1:3 via k
 stats file using 3:(f($1)) name "DATA"

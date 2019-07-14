@@ -2,7 +2,7 @@
 # Eje X = Algoritmo
 # Eje Y = Tiempo
 
-file = "../../cheapest-path/series/dijkstra.expB.series"
+file = "../../cheapest-path/series/dijkstra.expA.series"
 
 salida = "../dijkstra_correlacion.pdf"
 
