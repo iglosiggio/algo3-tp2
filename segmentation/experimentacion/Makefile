@@ -2,21 +2,23 @@ ALGOS=arbol-compr arbol arreglo
 EXES=$(ALGOS:=.algo)
 VECES=80
 
-all: variar-k variar-g
+ENTRADA:=entrada.txt
 
-salidas/%.arbol-compr.$(K).$(G).data: entrada.txt
+all: variar-k variar-g distintas-fotos
+
+salidas/%.arbol-compr.$(K).$(G).data: $(ENTRADA)
 	for i in $$(seq 1 $(VECES)); do \
-		../arbol-compr.algo $(K) 0.8 $(G) < entrada.txt >/dev/null; \
+		../arbol-compr.algo $(K) 0.8 $(G) < $(ENTRADA) >/dev/null; \
 	done 2>> $@
 
-salidas/%.arbol.$(K).$(G).data: entrada.txt
+salidas/%.arbol.$(K).$(G).data: $(ENTRADA)
 	for i in $$(seq 1 $(VECES)); do \
-		../arbol.algo $(K) 0.8 $(G) < entrada.txt >/dev/null; \
+		../arbol.algo $(K) 0.8 $(G) < $(ENTRADA) >/dev/null; \
 	done 2>> $@
 
-salidas/%.arreglo.$(K).$(G).data: entrada.txt
+salidas/%.arreglo.$(K).$(G).data: $(ENTRADA)
 	for i in $$(seq 1 $(VECES)); do \
-		../arreglo.algo $(K) 0.8 $(G) < entrada.txt >/dev/null; \
+		../arreglo.algo $(K) 0.8 $(G) < $(ENTRADA) >/dev/null; \
 	done 2>> $@
 
 variar-k: binarios-actualizados
@@ -44,6 +46,37 @@ variar-g: binarios-actualizados
 	cat salidas/g.arbol-compr.*.data > salidas/g.arbol-compr.resultados
 	cat salidas/g.arbol.*.data > salidas/g.arbol.resultados
 	cat salidas/g.arreglo.*.data > salidas/g.arreglo.resultados
+
+distintas-fotos: binarios-actualizados
+	rm -f salidas/foto_a.arreglo.resultados salidas/foto_a.arbol.resultados \
+		salidas/foto_a.arbol-compr.resultados
+#	rm -f salidas/foto_b.arreglo.resultados salidas/foto_b.arbol.resultados \
+#		salidas/foto_b.arbol-compr.resultados
+#	rm -f salidas/foto_c.arreglo.resultados salidas/foto_c.arbol.resultados \
+#		salidas/foto_c.arbol-compr.resultados
+	for foto in $$(seq 100 100 700); do \
+		$(MAKE) K=300 G=-1 ENTRADA=a.$$foto.txt \
+			salidas/foto_a.$$foto.arreglo.300.-1.data \
+			salidas/foto_a.$$foto.arbol.300.-1.data \
+			salidas/foto_a.$$foto.arbol-compr.300.-1.data; \
+		$(MAKE) K=300 G=-1 ENTRADA=b.$$foto.txt \
+			salidas/foto_b.$$foto.arreglo.300.-1.data \
+			salidas/foto_b.$$foto.arbol.300.-1.data \
+			salidas/foto_b.$$foto.arbol-compr.300.-1.data; \
+		$(MAKE) K=300 G=-1 ENTRADA=c.$$foto.txt \
+			salidas/foto_c.$$foto.arreglo.300.-1.data \
+			salidas/foto_c.$$foto.arbol.300.-1.data \
+			salidas/foto_c.$$foto.arbol-compr.300.-1.data; \
+	done
+	cat salidas/foto_a.*.arbol-compr.*.data > salidas/foto_a.arbol-compr.resultados
+	cat salidas/foto_a.*.arbol.*.data > salidas/foto_a.arbol.resultados
+	cat salidas/foto_a.*.arreglo.*.data > salidas/foto_a.arreglo.resultados
+	cat salidas/foto_b.*.arbol-compr.*.data > salidas/foto_b.arbol-compr.resultados
+	cat salidas/foto_b.*.arbol.*.data > salidas/foto_b.arbol.resultados
+	cat salidas/foto_b.*.arreglo.*.data > salidas/foto_b.arreglo.resultados
+	cat salidas/foto_c.*.arbol-compr.*.data > salidas/foto_c.arbol-compr.resultados
+	cat salidas/foto_c.*.arbol.*.data > salidas/foto_c.arbol.resultados
+	cat salidas/foto_c.*.arreglo.*.data > salidas/foto_c.arreglo.resultados
 
 binarios-actualizados:
 	$(MAKE) -C ../ all

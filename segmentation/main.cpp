@@ -178,7 +178,7 @@ int main(int argc, char** argv) {
 
 	std::cerr << K << ' ' << sigma << ' ' << min_feature << ' '
 		<< DURATION(segmentation) << ' ' << DURATION(cleaning)
-		<< std::endl;
+		<< ' ' << ancho << ' ' << alto << std::endl;
 
 	/* Escribo */
 	for (int i = 0; i < ancho * alto; i++) {

@@ -12,4 +12,4 @@ formatear() {
 }
 
 convert "$1" -colorspace gray -compress none -depth 8 pgm:- \
-	| sed '1d;3d' | formatear
+	| sed '/^#/d' | sed '1d;3d' | formatear
