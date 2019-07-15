@@ -1,4 +1,4 @@
-\subsection{Análisis de resultados}
+\subsection{Análisis cualitativo de resultados}
 
 Sumado a la comparación entre distintas implementaciones del
 \textsc{Disjoint-Set} en esta sección mostraremos segmentaciones resultantes de
@@ -7,6 +7,20 @@ tres videos dónde se varía cada uno de los parámetros mientras se fijan los
 otros dos\footnote{Dado que la forma en la que elegimos los colores no resultó
 estable respecto de variar $\sigma$ el video dónde se lo varía podría resultar
 molesto para personas con fotosensibildad.}.
+
+\subsubsection{Calidad de una segmentación}
+
+Una buena segmentación es un concepto difícil de definir, dado que depende el
+nivel de granularidad deseado ciertos segmentos pueden resultar útiles o no
+(ventanas en edificios, ojos en personas, letras individuales en una hoja,
+etc). Cómo nuestro algoritmo sólo percibe la intensidad de cada píxel se pierde
+información propia del color en la transformación que nos genera casos de error
+que podrían salvarse de otro modo.
+
+\subsubsection{Segmentación de una imagen con distintas texturas definidas}
+
+Como primer ejemplo construimos una imagen con 3 (o 2) regiones definidas: un
+degradé, una región de color sólido y una región con ruido.
 
 \begin{figure}[h]
 	\centering
@@ -21,12 +35,84 @@ molesto para personas con fotosensibildad.}.
 	\caption{$\sigma = 0.8,\ k = 500,\ g = 1000$.}
 \end{figure}
 
-Una buena segmentación es un concepto difícil de definir, dado que depende el
-nivel de granularidad deseado ciertos segmentos pueden resultar útiles o no
-(ventanas en edificios, ojos en personas, letras individuales en una hoja,
-etc). Cómo nuestro algoritmo sólo percibe la intensidad de cada píxel se pierde
-información propia del color en la transformación que nos genera casos de error
-que podrían salvarse de otro modo.
+El resultado del algoritmo es bueno pero requiere del postproceso de
+simplificación para eliminar pequeños segmentos que quedan dentro de la región
+con ruido. Una segmentación alternativa válida podría ubicar al degradé y el
+color sólido dentro de la misma región, pero dada la definición de $\tau(e)$ y
+el orden en el cual se construyen las regiones la región sólida tendrá un valor
+de $\tau$ muy pequeño para el momento en el que se evalúen las aristas que la
+unen con el degradé.
+
+\subsubsection{Segmentación de una imagen de vida silvestre}
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/entradas-posta/oso}
+		\caption{Entrada}
+	\end{subfigure}
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/salidas/{0.8.oso.jpg.500.100}.png}
+		\caption{Segmentación}
+	\end{subfigure}
+	\caption{$\sigma = 0.8,\ k = 500,\ g = 100$.}
+\end{figure}
+
+En esta segmentación existen varios resultados esperables. De acuerdo a la
+granularidad con la que miremos la imagen podemos pensar en distintas
+segmentaciones:
+
+\begin{itemize}
+	\item \textbf{Granularidad alta:}
+		El cuerpo del oso, su nariz, su reflejo, cada planta en la
+		foto, la rama, el agua, las uñas del oso.
+	\item \textbf{Granularidad baja:}
+		El oso, el agua, las plantas, la rama, el agua.
+\end{itemize}
+
+En el resultado conseguido podemos ver que se construyó un segmento con la
+planta que está por delante del oso pero esta planta está en un segmento
+distinto que el resto de las plantas\footnote{Esto será así siempre, dado que
+nuestra implementación sólo tiene en cuenta los píxeles inmediatamente vecinos,
+por lo que no puede reconocer objetos por sí mismos sino sólo regiones que
+mantieneni cierta similaridad interna.} las cuales acabaron en un segmento
+grande que podemos interpretar como ``fondo'' de la imagen. Lo mismo que
+ocurrió con la planta ocurrió con el oso, que vió su brazo en un segmento
+distinto del resto de su cuerpo.
+
+Podemos categorizar a esta segmentación como una de granularida baja.
+
+\newpage
+
+\subsubsection{Segmentación de una imagen con regiones planas}
+
+Finalmente analicemos la segmentación de una imagen con dos objetos claramente
+definidos y muchas regiones planas (que pueden o no resultar de interés de
+acuerdo al uso requerido).
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/entradas-posta/edificios}
+		\caption{Entrada}
+	\end{subfigure}
+	\begin{subfigure}{0.4\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/salidas/{0.8.edificios.png.600.-1}.png}
+		\caption{Segmentación}
+	\end{subfigure}
+	\caption{$\sigma = 0.8,\ k = 600$.}
+\end{figure}
+
+En el edificio de la izquierda puede notarse que se tomó casi todo como un
+único segmento. Esto puede ser deseable si se quieren las 3 obvias regiones (el
+cielo y los dos edificios). Sin embargo puede querer buscarse una segmentación
+que incluya a cada ventana como un segmento propio (o incluso un segmento que
+una a todas las ventanas).
+
+En esta imagen puede notarse la sensibilidad del resultado a los parámetros de
+entrada, dado que el edificio de la derecha tiene características más grandes
+el desenfoque le afectó menos por lo que se segmentó con mayor granularidad, lo
+contrario puede decirse del edificio de la izquierda.
 
 \subsubsection{Errores esperables}
 
@@ -37,14 +123,16 @@ ver los resultados\footnote{Se puede correr \texttt{make ver\_todos} en
 sin pasada de simplificación. También se pueden pasar los valores como
 parámetro en la forma \texttt{make BLUR=$\sigma$ K=$k$ MIN=$g$ ver\_todos}.}.
 
-En las siguientes imágenes se pueden apreciar distintas segmentaciones de uno
-de las imágenes que no pudimos encontrar un conjunto de parámetros que ofrezcan
-una segmentación razonable. Dado que la evidente diferencia de color no se
-traslada a la entrada en escala de grises. Puede observarse cómo el proceso de
-simplificación mantiene algunos de los limites de la imagen original para
-valores de $k$ muy bajos y cómo pu puede ser útil eliminar segmentos demasiado
-chicos con esa técnica en lugar de elevar el $k$ perdiendo los segmentos del
-insecto.
+En las siguientes secciones discutiremos errores recurrentes de las
+segmentaciones generadas por el algoritmo:
+
+\subsubsection{Texturas complejas}
+
+Ante texturas con regiones planas y regiones con saltos abruptos de intensidad
+(o una imagen con sombras muy fuertes) el algoritmo falla en construir una
+segmentación coherente, dado que lo que asume sobre la forma que tiene una
+región (variabilidad uniforme entre los píxeles que la componen) deja de ser
+cierto.
 
 \begin{figure}[h]
 	\centering
@@ -61,27 +149,28 @@ insecto.
 		\caption{$\sigma = 0,\ k = 6000$}
 	\end{subfigure}
 	\begin{subfigure}{0.4\linewidth}
-		\includegraphics[width=\linewidth]{segmentation/salidas/{0.0.mariquita.jpg.0.1000}.png}
-		\caption{$\sigma = 0,\ k = 0,\ g = 1000$}
-	\end{subfigure}
-	\begin{subfigure}{0.4\linewidth}
-		\includegraphics[width=\linewidth]{segmentation/salidas/{0.0.mariquita.jpg.600.-1}.png}
-		\caption{$\sigma = 0,\ k = 600$}
-	\end{subfigure}
-	\begin{subfigure}{0.4\linewidth}
 		\includegraphics[width=\linewidth]{segmentation/salidas/{0.0.mariquita.jpg.600.1000}.png}
 		\caption{$\sigma = 0,\ k = 600,\ g = 1000$}
 	\end{subfigure}
-	\caption{Distintas configuraciones con distintos tipos de error,
-	aquellas que no especifican valores para $g$ no tuvieron paso de
-	simplificación.}
+	\caption{Distintas configuraciones, aquellas que no especifican valores
+	para $g$ no tuvieron paso de simplificación.}
 \end{figure}
 
-\clearpage
+Dado que la evidente similaridad de color no se traslada a la entrada en escala
+de grises. El algorimo no puede construir un segmento coherente para las
+hojas\footnote{El insecto tiene su propio segmento pero el color es demasiado
+similar por lo que no puede apreciarse bien}.
+
+Aún así esta es una deficiencia clara de la técnica las hojas muestra una de
+las texturas en las que el algoritmo de segmentación fallan. También puede
+notarse que para tener una segmentación ``\emph{pasable}'' se requirió de un
+valor de $k$ muy alto comparado con los anteriormente utilizados (6000).
+
+\subsubsection{Grano y halo}
 
 La importancia del desenfoque no es evidente en todas las imágenes, la
 siguiente escena muestra un defecto que ocurre cuando las fotos tienen mucho
-grano:
+grano (y un defecto que ocurre al desenfocar mucho):
 
 \begin{figure}[h]
 	\centering
@@ -120,9 +209,28 @@ grano:
 	\caption{Segmentación de una escena simple con grano.}
 \end{figure}
 
-\clearpage
+El defecto causado por el grano ocurre por la misma razón que se segmenta en 3
+partes la imagen de prueba (degradé, negro y ruido) antes discutida. El
+algoritmo construye las regiones de acuerdo a la similaridad entre sus
+componentes, agrupando los píxeles que más se parecen entre sí primero. Cómo
+esto genera componentes grandes el factor de juego que aporta $\tau(e)$ se
+reduce lo suficiente como para que regiones muy similares no se unan una vez
+que el algoritmo comienza a procesar las aristas con mayor diferencia propias
+del grano.
 
-\subsubsection{Resultados favorables}
+El defecto del halo (el que puede verse en g y h) es uno causado por desenfoque
+excesivo. Aquí entra en juego el mismo factor pero sobre la interfaz que se
+forma en el límite entre dos regiones. Una forma de contrarestarlo es
+utilizando el posprocesamiento greedy que unirá estos segmentos por su eje de
+menor peso si son suficientemente pequeños.
+
+\subsubsection{Simplificación greedy}
+
+Una vez segmentada una imagen el algoritmo arroja comúnmente pequeños segmentos
+de pocos píxeles. Es por esto que se implementó el proceso de simplificación
+greedy, que suponiendo que el eje más liviano es el punto más obvio en el que
+unir dos regiones intenta simplificar la segmentación eliminando detalles
+menores.
 
 \begin{figure}[h]
 	\centering
