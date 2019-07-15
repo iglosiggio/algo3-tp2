@@ -402,8 +402,10 @@ Como podemos observar tanto Bellman Ford como Dijkstra con prioridad muestran un
 
 Creemos que esto se debe a que la forma en la que se generá $G'$ inhibe a ambos algoritmos de llegar al peor caso, dejando muy pocos casos desfavorables en las pruebas. Dijkstra con prioridad también mostro mala correlación. En ambos casos esto puede suceder debido a que su complejidad depende de $m$ el cuál sin importar que tan denso sea en $G$ observamos que no alcanza densidad suficiente en $G'$
 
-
+ 
 \subsubsection{Consideraciones y Trabajo Futuro de la sección Parte 2}
+
+Finalmente nuestra conclusión entonces es que Bellman-ford resultó el algoritmo ganador en todos los experimentos que corrimos. Así mismo fuimos capaces de corroborar nuestras estimaciones sobre la densidad de $G'$. Esto es interesante ya que originalmente cuando hablabamos del grafo $G$ original este podría ser representar cualquier tipo de grafo conexo. Sin embargo al plantear $G'$ se nota que perdemos esta propiedad ya que todos los grafos de $G'$ generan una fina cantidad de aristas bien definidas.
 
 En un principio teniamos planteadas un scope mucho más grande con el proyecto, sin embargo por limitaciones del tiempo no hemos podido cubrir todo lo que en un principio nos propusimos. Esta es solo una lista de cosas que consideramos que nos faltaron en la parte 2.
 
