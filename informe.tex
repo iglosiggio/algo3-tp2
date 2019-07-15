@@ -110,6 +110,8 @@ Además los caminos minimos no necesariamente son simples, por ejemplo dadas 3 c
 Estas renstricciones aseguran que no es posible aplicar un algoritmo de camino minimo con la información del grafo original. Sin embargo en secciones posteriores analizaremos alternativas que nos permitan resolver el problema.
 
 
+
+
 \subsubsection{Pautas de diseño}
 
 El objetivo de este trabajo será entonces plantear transformaciones del grafo original que nos permitan aplicar algoritmos de camino minimo. Buscaremos establecer una cota de las dimensiones de nuestro nuevo grafo en función de la densidad y tamaño del grafo original.
@@ -410,7 +412,7 @@ En un principio teniamos planteadas un scope mucho más grande con el proyecto, 
 	
 	\item Corroboramos que aquellos algoritmos que dependen de $m$ muestran una velocidad observable mejor, sin embargo no hicimos mucho análisis por ejemplo en probar ejecutar nuestros algoritmos con diferentes estructuras. Por ejemplo Floyd Warshall requiere como estructura una matriz. Sin embargo aclaramos que nuestra implementación de Bellman Ford es con lista de adyacencia. ¿Performaría mejor con una estructura de lista de aristas? es una de las preguntas que nos quedo en el tintero.
 	
-	\item En el primer experimento, $n \in [3; 12]$ nos hubierá gustado tomar un $n$ más grande sin embargo lo elegimos así por su practicidad para realizar una experimentación rapida. (En particular no puedo dejar días mi computadora procesando casos)
+	\item En el primer experimento, $n \in [3; 12]$ nos hubierá gustado tomar un $n$ más grande sin embargo lo elegimos así por su practicidad para realizar una experimentación rapida.
 \end{enumerate}
 
 
