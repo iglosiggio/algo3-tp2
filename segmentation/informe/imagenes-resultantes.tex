@@ -249,6 +249,13 @@ menores.
 	\caption{Segmentacion de \texttt{iglesia.jpg}}
 \end{figure}
 
+En esta imagen (y la siguiente) pueden notarse pequeñas regiones de pocos
+píxeles que se eliminan al correr el proceso de simplificación. Entregando una
+segmentación más simple que podría servir de entrada a otro algoritmo
+(dividiendo la imagen original en estos segmentos, por ejemplo).
+
+\newpage
+
 \begin{figure}[h]
 	\centering
 	\begin{subfigure}{0.3\linewidth}
@@ -266,23 +273,43 @@ menores.
 	\caption{Segmentacion de \texttt{iglesia\_2.jpg}}
 \end{figure}
 
-\begin{figure}[h]
-	\centering
-	\begin{subfigure}{0.3\linewidth}
-		\includegraphics[width=\linewidth]{segmentation/entradas-posta/piramide_camello}
-		\caption{Entrada}
-	\end{subfigure}
-	\begin{subfigure}{0.3\linewidth}
-		\includegraphics[width=\linewidth]{segmentation/salidas/{0.8.piramide_camello.jpg.300.-1}.png}
-		\caption{$\sigma = 0.8,\ k = 300$}
-	\end{subfigure}
-	\begin{subfigure}{0.3\linewidth}
-		\includegraphics[width=\linewidth]{segmentation/salidas/{0.8.piramide_camello.jpg.300.1000}.png}
-		\caption{$g = 1000$}
-	\end{subfigure}
-	\caption{Segmentacion de \texttt{piramide\_camello.jpg}}
-\end{figure}
+En esta imagen puede observarse uno de los defectos de la simplificación
+greedy.  Sobre la escalera se construyeron segmentos correspondientes al
+espacio entre peldaños, pero estos se vieron simplificados en pos de reducir la
+cantidad de segmentos de la imagen. Otro ejemplo de imagen en la cuál ocurre
+esto es en \texttt{ciudad.jpg}\footnote{Puede verse al segmentar esta imagen
+que se generan segmentos indeseables de mayor tamaño que las ventanas de los
+edificios.} Cómo el proceso de simplificación sólo tiene en cuenta el tamaño de
+las regiones este defecto no es siempre corregible cambiando el valor de $g$.
 
-Cómo puede observarse, dado suficiente contraste el algoritmo genera
-segmentaciones razonables, aunque por usar la 8-vecindad de cada píxel
-construye pequeños segmentos en lugares quese ven cortados por una sombra.
+\subsubsection{Análisis de los videos adjuntos}
+
+Adjunto a este trabajo se encuentran tres vídeos dónde se varían $k$, $g$ y
+$\sigma$ en \texttt{autitos.jpg}.
+
+Al variar $g$ puede verse que muchos de los valores no representan cambio
+alguno pero los cambios generan refinaciones de la misma segmentación por lo
+que consideramos que es un parámetros útil para generar segmentaciones con una
+cantidad acotada de segmentos.
+
+Al variar $k$ se nota cómo parte del ``ruido'' no se une nunca a los segmentos
+más grandes (lo cuál fué la razón principal de escribir el postprocesamiento) y
+cómo valores muy altos de $k$ eliminan detalles importantes (cómo el cartel de
+castrol en el fondo o el número del auto en la competencia). Esto nos indica
+que hay puntos dónde fijar $k$ y variar $g$ (para eliminar ruido) puede
+producir mejores segmentaciones que simplemente aumentar $k$. Otra cosa notable
+es que pasado un valor de $k$ los cambios se reducen muchísimo y la
+segmentación se ``estabiliza''. Esta observación es interesante si se pretende
+utilizar un programa para buscar una ``buena segmentación'' variando los
+parámetros del algoritmo.
+
+Variando $\sigma$ la imagen se degenera muy rápidamente generando halos y
+``redondeando'' los bordes de las regiones. Esto nos muestra que el desenfoque
+tiene un rango muy acotado de valores sobre los cuáles no afecta notablemente a
+la imagen, lo cuál es de gran ayuda (por acotar la búsqueda) a la hora de
+buscar una buena segmentación variando los parámetros. Sin embargo vale la pena
+notar que el efecto del desenfoque es relativo al tamaño de la imagen (una
+imagen muy grande requerirá un $\sigma$ más alto para mostrar estos
+``artifacts'').
+
+\clearpage
