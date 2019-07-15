@@ -336,7 +336,7 @@ Además hay ciertos parámetros que serán inmutables durante la experimentació
 
 \begin{itemize}
 	\item las Distancias entre ciudades viven entre $(0..60)$ (debido a que distancias mayores son imposibles de cruzar) 
-	\item Los precios de combustible $p_i$ en cada ciudad viven entre $(100..200)$ la idea de que los precios no puedan variar más del doble es evitar que una ciudad posea un costo tan bajo que siempre se pase por ella.
+	\item Los precios de combustible $q_i$ en cada ciudad viven entre $(100..200)$ la idea de que los precios no puedan variar más del doble es evitar que una ciudad posea un costo tan bajo que siempre se pase por ella.
 \end{itemize}
 
 
@@ -413,6 +413,8 @@ En un principio teniamos planteadas un scope mucho más grande con el proyecto, 
 	\item Corroboramos que aquellos algoritmos que dependen de $m$ muestran una velocidad observable mejor, sin embargo no hicimos mucho análisis por ejemplo en probar ejecutar nuestros algoritmos con diferentes estructuras. Por ejemplo Floyd Warshall requiere como estructura una matriz. Sin embargo aclaramos que nuestra implementación de Bellman Ford es con lista de adyacencia. ¿Performaría mejor con una estructura de lista de aristas? es una de las preguntas que nos quedo en el tintero.
 	
 	\item En el primer experimento, $n \in [3; 12]$ nos hubierá gustado tomar un $n$ más grande sin embargo lo elegimos así por su practicidad para realizar una experimentación rapida.
+	
+	\item En el momento que mostramos el algoritmo para generar $F(G)$ de $G'$ hablamos de lo fuertemente dependiente que era del parametro $W$ sin embargo consideramos que realizar un análisis en detalle sobre este tema, fue un faltante que quedará pendiente.
 \end{enumerate}
 
 
