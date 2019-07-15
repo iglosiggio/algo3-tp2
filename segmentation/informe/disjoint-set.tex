@@ -37,6 +37,54 @@ tamaño).
 
 \subsubsection{Resultados con distintos tamaños de imagen}
 
+En esta apartado Se quiere determinar el comportamiento de nuestros algoritmos propuestos con diferentes tamaños de imagen. Queremos verificar en cada uno de ellos como se mueve el timpo de ejecución. 
+
+Para esto se usarán 3 imagenes con dimensiones cuadradas por su facilidad para redimensionarlas. Luego los candidatos se expondrán en formatos de $[100x100px,200x200px...700x700px]$,
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}{0.3\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/entradas-posta/mondrian}
+		\caption{Mondrian}
+	\end{subfigure}
+	\begin{subfigure}{0.3\linewidth}
+	\includegraphics[width=\linewidth]{segmentation/entradas-posta/edificios}
+	\caption{Edificios}
+	\end{subfigure}
+	\begin{subfigure}{0.3\linewidth}
+		\includegraphics[width=\linewidth]{segmentation/entradas-posta/bosque}
+		\caption{Bosque}
+	\end{subfigure}
+\end{figure}
+
+Las 3 imagenes han sido seleccionadas para no compartir nada en común, así mismo se decidió que cada una de ellas posean diferentes dificultades de seccionamiento. Por ejemplo en la $Fig_A$ es trivial pensar cual sería la segmentación correcta.
+
+Sin embargo en $Fig_B$ esto no es tan simple, sin embargo se podría definir un seccionamiento razonable por ejemplo seccionar el cielo de cada uno de los edificios y sus respectivas ventanas. En $Fig_C$ es muy dificil interpretar que se entiende por una segmentación \textit{"suficientemente buena"}
+
+En cada una de las generaciones se setean $k = 300$, $\sigma = 0.8$, con $g$ deshabilitado. No nos interesa ver si la modificación de estos parámetros puede alterar los tiempos de ejcución. Dicha experimentación se vera en secciones posteriores.
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/distintas-fotos-arreglo}
+	\caption{Segmentación disjoint-set con arreglo.}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/distintas-fotos-arbol}
+	\caption{Segmentación disjoint-set con árbol.}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\linewidth]{segmentation/experimentacion/distintas-fotos-arbol-compr}
+	\caption{Segmentación disjoint-set con árbol con compresión.}
+\end{figure}
+
+En los 3 algoritmos podemos observar que un comportamiento similar, siendo el algoritmo de àrbol de compresión el que muestra un rendimiento superior lo cual es esperable.
+
+
 \subsubsection{Influencia de los parámetros}
 
 Esta sección del informe analiza el rendimiento de las distintas
