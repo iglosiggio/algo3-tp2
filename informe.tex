@@ -77,7 +77,7 @@ El costo de cargar nafta en una ciudad se encuentra en función de los vertices,
 
 Las rutas son bidireccionales, sin embargo dadas 2 ciudades $c_a$ y $c_b$ no se cumple que los costes $c_a \rightarrow c_b$ y $c_b \rightarrow c_a$ sean iguales.
 
-Eso significa que una representación direccional con digrafos podría resultar más adecuada para representar los costes efectivos. $Fig1, Fig2$ ilustran esta diferencia para 2 ciudades.
+Eso significa que una representación direccional con digrafos podría resultar más adecuada para representar los costes efectivos. En las figuras posteriores se ilustran esta diferencia para 2 ciudades.
 
 \begin{minipage}{0.5\textwidth}
 	\includegraphics[width=\linewidth]{{graficos/direccional}.pdf}
@@ -95,7 +95,7 @@ Además los caminos minimos no necesariamente son simples, por ejemplo dadas 3 c
 \begin{minipage}{0.5\textwidth}
 	Tengo que si $q_a > q_b$ podría tener que evaluar si moverme allí para cargar nafta y volver es menos costoso, que ir directamente.
 	
-	En $Fig3$ se ilustra un grafo donde el costo de ir de $c_A$ a $c_c$ directamente es $p_a * d_{a,c} = 750$.
+	En la siguiente imagen se ilustra un grafo donde el costo de ir de $c_A$ a $c_c$ directamente es $p_a * d_{a,c} = 750$.
 	
 	Mientras que el camino pasando por $c_b$ son los costos asociados de ir de:
 	
@@ -396,7 +396,7 @@ Por último analizaremos las correlaciones de los algoritmos que si dependen de 
 \captionof{figure}{Dijkstra con prioridad}
 \end{center}
 
-Como podemos observar tanto Bellman Ford como Dijkstra con prioridad muestran una correlación considerablemente menor a los algoritmos anteriores. De hecho en $Fig20$ se puede notar que el fit de Bellman Ford es observablemente malo.
+Como podemos observar tanto Bellman Ford como Dijkstra con prioridad muestran una correlación considerablemente menor a los algoritmos anteriores. De hecho en el gráfico de Bellman Ford se puede notar que el fit de Bellman Ford es observablemente malo.
 
 Creemos que esto se debe a que la forma en la que se generá $G'$ inhibe a ambos algoritmos de llegar al peor caso, dejando muy pocos casos desfavorables en las pruebas. Dijkstra con prioridad también mostro mala correlación. En ambos casos esto puede suceder debido a que su complejidad depende de $m$ el cuál sin importar que tan denso sea en $G$ observamos que no alcanza densidad suficiente en $G'$
 
