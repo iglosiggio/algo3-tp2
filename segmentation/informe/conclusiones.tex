@@ -6,11 +6,26 @@ Buscar heurísticas para encontrar éstos es un camino posible para facilitar el
 uso del algoritmo así cómo otras formulaciones para la diferencia entre píxeles
 y para $\tau(C)$.
 
-A pesar de la sensibilidad de los parámetros aprendimos como utilizar filtros Gaussianos y incorporamos nuestro propio $\sigma$. El cual mostro resultados cualitativos bastante satisfactorios. En general la razón por la que creamos dicho filtro fue que los filtros Gaussianos provistos por las librerias de c++, no nos generaban la performance que esperabamos y resultaban poco precisos. Hubiese estado bueno, realizar un análisis a fondo comparando ambos filtros Gaussianos y analizar si existen casos donde un filtro performe mejor que otro. 
+A pesar de la sensibilidad de los parámetros el implementar el desenfoque
+gaussiano mostró resultados cualitativos satisfactorios. La razón por la que
+creamos dicho filtro fue que realizar el desenfoque por fuera del programa
+introducia errores de quantización al guardar el resultado intermedio en un
+entero con rango acotado (0 a 255).
 
-Pese a que utilizamos diferentes imágenes para ver cómo afectan al tiempo dadas las distintas implementaciones. Consideramos que estos casos fueron exploradons con poco detalle. Así mismo nos hubiese gustado realizar gráficos de correlación que corroboren las complejidades propuestas de los algoritmos. Dicha tarea no fue abordada por escasez de tiempo y consideramos un faltante que nos quedo pendiente.
+Pese a que utilizamos diferentes imágenes para ver cómo afectan al tiempo dadas
+las distintas implementaciones consideramos que estos casos fueron explorados
+con poco detalle. También nos hubiese gustado realizar gráficos de correlación
+para comparar las complejidades teóricas con los tiempos mediod.  Dicha tarea
+no fue abordada por escasez de tiempo y consideramos un faltante que nos quedó
+pendiente.
 
-Creemos también que los videos que complementan éste informe resultan útiles para entender las cualidades de la técnica. Pero dado que la selección de colores no es estable respecto de $\tau$ una estrategia
-mejor para construir las visualizaciones variando los parámetros es algo que creemos nos faltó.
+Creemos también que los videos que complementan éste informe resultan útiles
+para entender las cualidades de la técnica. Pero dado que la selección de
+colores no es estable respecto de $\sigma$ creemos que el vídeo en el que lo
+variamos no aporta la intuición que esperábamos.
 
-A pesar de todo, los resultados obtenidos los consideramos satisfactorios, se puede distinguir objetos, figuras, detalles en las imagenes con diferentes grados de precisión, para cualquier tamaño. Así mismo notamos que los parametros $k=[300,600]$ $\sigma = 0.8$ y $g = 1000$ en lineas generales han mostrado buenos resultados con sus respectivos casos desfavorables. 
+A pesar de todo, consideramos satisfactorios los resultados obtenidos, se puede
+distinguir objetos, figuras, detalles en las imagenes con diferentes grados de
+precisión, para cualquier tamaño. Así mismo notamos que los parametros $k =
+[300, 600]$, $\sigma = 0.8$ y $g = 1000$ han mostrado buenos resultados en
+líneas generales.
