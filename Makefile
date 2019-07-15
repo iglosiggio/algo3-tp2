@@ -22,7 +22,10 @@ graficos_segmentacion=graficos/grilla.pdf
 experimentos_segmentacion=segmentation/experimentacion/variar-k.pdf \
 			  segmentation/experimentacion/variar-g-arreglo.pdf \
 			  segmentation/experimentacion/variar-g-arbol.pdf \
-			  segmentation/experimentacion/variar-g-arbol-compr.pdf
+			  segmentation/experimentacion/variar-g-arbol-compr.pdf \
+			  segmentation/experimentacion/distintas-fotos-arreglo.pdf \
+			  segmentation/experimentacion/distintas-fotos-arbol.pdf \
+			  segmentation/experimentacion/distintas-fotos-arbol-compr.pdf
 tex_segmentacion=$(wildcard segmentation/informe/*.tex)
 
 graficos_cheapest=graficos/bidireccional.pdf graficos/direccional.pdf \
